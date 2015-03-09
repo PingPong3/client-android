@@ -6,7 +6,7 @@
 
 * Android Studio 1.0以降
 * JDK 7以降
-※ Android端末 4.1以降
+* Android端末 4.1以降
 * 無線LAN （LAN内のPCとAndroid間で通信可能なもの）
 
 ## 開発環境構築手順
