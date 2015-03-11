@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import red.itvirtuoso.pingpong3.R;
 
-public class MainActivity extends Activity implements TitleFragment.OnFragmentInteractionListener {
+public class MainActivity extends Activity implements
+        TitleFragment.OnFragmentInteractionListener,
+        RacketFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,7 +15,7 @@ public class MainActivity extends Activity implements TitleFragment.OnFragmentIn
         setContentView(R.layout.activity_title);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, TitleFragment.newInstance())
+                    .add(R.id.container, RacketFragment.newInstance())
                     .commit();
         }
     }
