@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by kenji on 15/03/12.
  */
-public abstract class Game implements Runnable {
+public abstract class Game {
     private Set<GameEventListener> mListeners = new HashSet<>();
     private ExecutorService mService;
     private List<Reserve> mReserves = new ArrayList<>();
@@ -27,7 +27,7 @@ public abstract class Game implements Runnable {
 
     public Game() {
         mService = Executors.newSingleThreadExecutor();
-        mService.execute(this);
+        mService.execute(new Loop());
         mService.shutdown();
     }
 
@@ -51,43 +51,46 @@ public abstract class Game implements Runnable {
         mListeners.remove(listener);
     }
 
-    @Override
-    public void run() {
-        long now = System.currentTimeMillis();
-        while (!Thread.interrupted()) {
-            sendEvent();
-            now += 16;
-            waitNextFrame(now);
-        }
-    }
+    private class Loop implements Runnable {
 
-    private void sendEvent() {
-        long now = System.currentTimeMillis();
-        ArrayList<Reserve> actionedList = new ArrayList<>();
-        synchronized (mReserves) {
-            for (Reserve reserve : mReserves) {
-                if (now < reserve.mTime) {
-                    continue;
-                }
-                for (GameEventListener listener : mListeners) {
-                    listener.onGameAction(reserve.mEvent);
-                }
-                actionedList.add(reserve);
+        @Override
+        public void run() {
+            long now = System.currentTimeMillis();
+            while (!Thread.interrupted()) {
+                sendEvent();
+                now += 16;
+                waitNextFrame(now);
             }
-            mReserves.removeAll(actionedList);
         }
-    }
 
-    private void waitNextFrame(long nextTime) {
-        long elapsed = nextTime - System.currentTimeMillis();
-        if (elapsed <= 0) {
+        private void sendEvent() {
+            long now = System.currentTimeMillis();
+            ArrayList<Reserve> actionedList = new ArrayList<>();
+            synchronized (mReserves) {
+                for (Reserve reserve : mReserves) {
+                    if (now < reserve.mTime) {
+                        continue;
+                    }
+                    for (GameEventListener listener : mListeners) {
+                        listener.onGameAction(reserve.mEvent);
+                    }
+                    actionedList.add(reserve);
+                }
+                mReserves.removeAll(actionedList);
+            }
+        }
+
+        private void waitNextFrame(long nextTime) {
+            long elapsed = nextTime - System.currentTimeMillis();
+            if (elapsed <= 0) {
+                return;
+            }
+            try {
+                Thread.sleep(elapsed);
+            } catch (InterruptedException e) {
+            /* nop */
+            }
             return;
         }
-        try {
-            Thread.sleep(elapsed);
-        } catch (InterruptedException e) {
-            /* nop */
-        }
-        return;
     }
 }
