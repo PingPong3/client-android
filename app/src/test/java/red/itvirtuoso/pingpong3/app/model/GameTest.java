@@ -26,7 +26,7 @@ public class GameTest {
         }
     }
 
-    private class GameEventListenerEx implements GameEventListener {
+    private class GameActionEx implements GameAction {
         private List<GameEventLog> mLogs = new ArrayList<>();
 
         @Override
@@ -43,7 +43,7 @@ public class GameTest {
          *  500ms ... １回目のバウンド
          * 1000ms ... ２回目のバウンド
          */
-        GameEventListenerEx listener = new GameEventListenerEx();
+        GameActionEx listener = new GameActionEx();
         Game game = new GameEx();
         game.addListener(listener);
         game.swing(PlayerType.SELF);
@@ -68,7 +68,7 @@ public class GameTest {
 
     @Test
     public void リスナーを取り除く() throws Exception {
-        GameEventListenerEx listener = new GameEventListenerEx();
+        GameActionEx listener = new GameActionEx();
         Game game = new GameEx();
         game.addListener(listener);
         game.removeListener(listener);

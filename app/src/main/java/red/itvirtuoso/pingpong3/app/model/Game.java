@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
  * Created by kenji on 15/03/12.
  */
 public abstract class Game {
-    private Set<GameEventListener> mListeners = new HashSet<>();
+    private Set<GameAction> mListeners = new HashSet<>();
     private ExecutorService mService;
     private List<Reserve> mReserves = new ArrayList<>();
 
@@ -43,11 +43,11 @@ public abstract class Game {
         }
     }
 
-    public void addListener(GameEventListener listener) {
+    public void addListener(GameAction listener) {
         mListeners.add(listener);
     }
 
-    public void removeListener(GameEventListener listener) {
+    public void removeListener(GameAction listener) {
         mListeners.remove(listener);
     }
 
@@ -71,7 +71,7 @@ public abstract class Game {
                     if (now < reserve.mTime) {
                         continue;
                     }
-                    for (GameEventListener listener : mListeners) {
+                    for (GameAction listener : mListeners) {
                         listener.onGameAction(reserve.mEvent);
                     }
                     actionedList.add(reserve);

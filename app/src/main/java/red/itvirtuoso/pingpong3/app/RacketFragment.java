@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import red.itvirtuoso.pingpong3.R;
+import red.itvirtuoso.pingpong3.app.model.GameAction;
 import red.itvirtuoso.pingpong3.app.model.GameEvent;
-import red.itvirtuoso.pingpong3.app.model.GameEventListener;
 
-public class RacketFragment extends Fragment implements SensorEventListener, GameEventListener {
+public class RacketFragment extends Fragment implements SensorEventListener, GameAction {
     private OnFragmentInteractionListener mListener;
 
     private SensorManager mSensorManager;
@@ -152,9 +152,9 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
     }
 
     public interface OnFragmentInteractionListener {
-        public void onRacketAdd(GameEventListener listener);
+        public void onRacketAdd(GameAction listener);
 
-        public void onRacketRemove(GameEventListener listener);
+        public void onRacketRemove(GameAction listener);
 
         public void onSwing();
     }
