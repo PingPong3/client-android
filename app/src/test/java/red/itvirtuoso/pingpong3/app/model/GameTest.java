@@ -13,6 +13,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class GameTest {
     private class GameEx extends Game {
+        /* nop */
     }
 
     private class GameEventLog {
@@ -61,6 +62,8 @@ public class GameTest {
         GameEventLog log2 = listener.mLogs.get(2);
         assertEquals("２回目のバウンドのイベントが発生していない", GameEvent.SECOND_BOUND, log2.mEvent);
         assertTrue("２回目のバウンドのイベントの時間がずれている", Math.abs(log2.mTime - (now + 1000)) < tolerance);
+
+        game.shutdown();
     }
 
     @Test
@@ -72,5 +75,7 @@ public class GameTest {
         game.swing(PlayerType.SELF);
         Thread.sleep(100);
         assertEquals("リスナーを取り除いたのにイベントが発生した", 0, listener.mLogs.size());
+
+        game.shutdown();
     }
 }
