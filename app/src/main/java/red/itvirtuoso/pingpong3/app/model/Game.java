@@ -11,6 +11,13 @@ import java.util.concurrent.Executors;
  * Created by kenji on 15/03/12.
  */
 public abstract class Game {
+    private static final int DEFAULT_BALL_SPEED = 500;
+    private static final int FRAME_RATE = 60;
+
+    private int mBallSpeed;
+    private int mWaitTime;
+    private int mTolerance;
+
     private Set<GameAction> mListeners = new HashSet<>();
     private ExecutorService mService;
     private List<Reserve> mReserves = new ArrayList<>();
@@ -26,9 +33,21 @@ public abstract class Game {
     }
 
     public Game() {
+        this(DEFAULT_BALL_SPEED);
+    }
+
+    public Game(int ballSpeed) {
+        mBallSpeed = ballSpeed;
+        mWaitTime = 1000 / FRAME_RATE;
+        mTolerance = mWaitTime * 2;
+
         mService = Executors.newSingleThreadExecutor();
         mService.execute(new Loop());
         mService.shutdown();
+    }
+
+    public long getTolerance() {
+        return mTolerance;
     }
 
     public void shutdown() {
@@ -38,8 +57,8 @@ public abstract class Game {
     public void swing(PlayerType type) {
         synchronized (mReserves) {
             mReserves.add(new Reserve(0, GameEvent.SERVE));
-            mReserves.add(new Reserve(500, GameEvent.FIRST_BOUND));
-            mReserves.add(new Reserve(1000, GameEvent.SECOND_BOUND));
+            mReserves.add(new Reserve(mBallSpeed * 1, GameEvent.FIRST_BOUND));
+            mReserves.add(new Reserve(mBallSpeed * 2, GameEvent.SECOND_BOUND));
         }
     }
 
@@ -58,7 +77,7 @@ public abstract class Game {
             long now = System.currentTimeMillis();
             while (!Thread.interrupted()) {
                 sendEvent();
-                now += 16;
+                now += mWaitTime;
                 waitNextFrame(now);
             }
         }
