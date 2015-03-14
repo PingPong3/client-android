@@ -18,7 +18,7 @@ public class GameTest {
         private List<GameEvent> mEvents = new ArrayList<>();
 
         @Override
-        public void onEvent(GameEvent event) {
+        public void onGameAction(GameEvent event) {
             mEvents.add(event);
         }
     }

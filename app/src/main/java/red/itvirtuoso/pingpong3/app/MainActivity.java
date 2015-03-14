@@ -6,6 +6,7 @@ import android.os.Bundle;
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.model.Game;
 import red.itvirtuoso.pingpong3.app.model.GameEventListener;
+import red.itvirtuoso.pingpong3.app.model.PlayerType;
 import red.itvirtuoso.pingpong3.app.model.SingleGame;
 
 public class MainActivity extends Activity implements
@@ -44,5 +45,10 @@ public class MainActivity extends Activity implements
     @Override
     public void onRacketRemove(GameEventListener listener) {
         mGame.removeListener(listener);
+    }
+
+    @Override
+    public void onSwing() {
+        mGame.swing(PlayerType.SELF);
     }
 }

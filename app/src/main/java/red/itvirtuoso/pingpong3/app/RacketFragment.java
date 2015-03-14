@@ -31,6 +31,9 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
 
     private SoundPool mSoundPool;
     private int mRawFoo;
+    private int mRawKa;
+    private int mRawKo;
+    private int mRawWhistle;
 
     public static RacketFragment newInstance() {
         RacketFragment fragment = new RacketFragment();
@@ -81,8 +84,11 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
         }
 
         /* サウンドの登録 */
-        mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        mSoundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
         mRawFoo = mSoundPool.load(getActivity(), R.raw.foo, 1);
+        mRawKa = mSoundPool.load(getActivity(), R.raw.ka, 1);
+        mRawKo = mSoundPool.load(getActivity(), R.raw.ko, 1);
+        mRawWhistle = mSoundPool.load(getActivity(), R.raw.whistle, 1);
     }
 
     @Override
@@ -124,20 +130,32 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
         double acceleration = Math.abs(event.values[2] - mGravityZ);
         if (!mSwinging && acceleration > mAccelerationThreshold * 3) {
             mSwinging = true;
-            playSound(mRawFoo);
+            mListener.onSwing();
         } else if (mSwinging && acceleration < mAccelerationThreshold) {
             mSwinging = false;
         }
     }
 
     @Override
-    public void onEvent(GameEvent event) {
-
+    public void onGameAction(GameEvent event) {
+        switch (event) {
+            case SERVE:
+                playSound(mRawKa);
+                break;
+            case FIRST_BOUND:
+                /* fall through */
+            case SECOND_BOUND:
+                playSound(mRawKo);
+            default:
+                /* nop */
+        }
     }
 
     public interface OnFragmentInteractionListener {
         public void onRacketAdd(GameEventListener listener);
 
         public void onRacketRemove(GameEventListener listener);
+
+        public void onSwing();
     }
 }

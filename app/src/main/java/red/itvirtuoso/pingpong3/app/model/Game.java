@@ -11,9 +11,9 @@ public abstract class Game {
 
     public void swing(PlayerType type) {
         for(GameEventListener listener : mListeners) {
-            listener.onEvent(GameEvent.SERVE);
-            listener.onEvent(GameEvent.FIRST_BOUND);
-            listener.onEvent(GameEvent.SECOND_BOUND);
+            listener.onGameAction(GameEvent.SERVE);
+            listener.onGameAction(GameEvent.FIRST_BOUND);
+            listener.onGameAction(GameEvent.SECOND_BOUND);
         }
     }
 
