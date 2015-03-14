@@ -39,7 +39,6 @@ public class GameTest {
 
         @Override
         public void onGameAction(GameEvent event) {
-            System.out.println(event);
             mLogs.add(new GameEventLog(event, System.currentTimeMillis()));
         }
     }

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kenji on 15/03/12.
@@ -20,7 +22,7 @@ public abstract class Game {
     private int mUnitTime;
 
     private Set<GameAction> mListeners = new HashSet<>();
-    private ExecutorService mService;
+    private ScheduledExecutorService mService;
     private List<Reserve> mReserves = new ArrayList<>();
 
     private class Reserve {
@@ -40,9 +42,8 @@ public abstract class Game {
     public Game(int unitTime) {
         mUnitTime = unitTime;
 
-        mService = Executors.newSingleThreadExecutor();
-        mService.execute(new Loop());
-        mService.shutdown();
+        mService = Executors.newSingleThreadScheduledExecutor();
+        ScheduledFuture future = mService.scheduleAtFixedRate(new Loop(), 0, WAIT_TIME, TimeUnit.MILLISECONDS);
     }
 
     public long getTolerance() {
@@ -74,15 +75,6 @@ public abstract class Game {
         @Override
         public void run() {
             long now = System.currentTimeMillis();
-            while (!Thread.interrupted()) {
-                sendEvent();
-                now += WAIT_TIME;
-                waitNextFrame(now);
-            }
-        }
-
-        private void sendEvent() {
-            long now = System.currentTimeMillis();
             ArrayList<Reserve> actionedList = new ArrayList<>();
             synchronized (mReserves) {
                 for (Reserve reserve : mReserves) {
@@ -96,19 +88,6 @@ public abstract class Game {
                 }
                 mReserves.removeAll(actionedList);
             }
-        }
-
-        private void waitNextFrame(long nextTime) {
-            long elapsed = nextTime - System.currentTimeMillis();
-            if (elapsed <= 0) {
-                return;
-            }
-            try {
-                Thread.sleep(elapsed);
-            } catch (InterruptedException e) {
-            /* nop */
-            }
-            return;
         }
     }
 }
