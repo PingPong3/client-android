@@ -2,6 +2,7 @@ package red.itvirtuoso.pingpong3.app.model;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +18,7 @@ public class GameTest {
     }
 
     private class GameEventListenerEx implements GameEventListener {
-        private List<GameEvent> mEvents;
+        private List<GameEvent> mEvents = new ArrayList<>();
 
         @Override
         public void onEvent(GameEvent event) {
