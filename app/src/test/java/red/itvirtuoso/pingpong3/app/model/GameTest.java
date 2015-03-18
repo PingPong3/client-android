@@ -55,6 +55,7 @@ public class GameTest {
         Game game = new GameEx(TEST_UNIT_TIME);
         long tolerance = game.getTolerance();
         game.addListener(listener);
+        game.start();
         game.swing(PlayerType.SELF);
         long now = System.currentTimeMillis();
         Thread.sleep(TEST_UNIT_TIME * 3);
@@ -79,9 +80,10 @@ public class GameTest {
         GameActionEx listener = new GameActionEx();
         Game game = new GameEx();
         game.addListener(listener);
+        game.start();
         game.removeListener(listener);
         game.swing(PlayerType.SELF);
-        Thread.sleep(100);
+        Thread.sleep(TEST_UNIT_TIME * 2);
         assertEquals("リスナーを取り除いたのにイベントが発生した", 0, listener.mLogs.size());
 
         game.shutdown();

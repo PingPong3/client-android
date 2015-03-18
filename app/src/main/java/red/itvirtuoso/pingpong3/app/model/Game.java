@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,13 +40,15 @@ public abstract class Game {
 
     public Game(int unitTime) {
         mUnitTime = unitTime;
-
-        mService = Executors.newSingleThreadScheduledExecutor();
-        ScheduledFuture future = mService.scheduleAtFixedRate(new Loop(), 0, WAIT_TIME, TimeUnit.MILLISECONDS);
     }
 
     public long getTolerance() {
         return TOLERANCE;
+    }
+
+    public void start() {
+        mService = Executors.newSingleThreadScheduledExecutor();
+        mService.scheduleAtFixedRate(new Loop(), 0, WAIT_TIME, TimeUnit.MILLISECONDS);
     }
 
     public void shutdown() {
