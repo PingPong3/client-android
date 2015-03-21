@@ -75,10 +75,10 @@ public class GameTest {
         assertEquals("発生するイベント数が異なる", 3, listener.mLogs.size());
         GameEventLog log0 = listener.mLogs.get(0);
         assertEquals("サーブイベントが発生していない", GameEvent.SERVE, log0.mEvent);
-        assertTrue("サーブイベントの時間がずれている", Math.abs(log0.mTime - (now + 0)) < tolerance);
+        assertTrue("サーブイベントの時間がずれている", Math.abs(log0.mTime - (now + TEST_UNIT_TIME * 0)) < tolerance);
         GameEventLog log1 = listener.mLogs.get(1);
         assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.FIRST_BOUND, log1.mEvent);
-        assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log1.mTime - (now + TEST_UNIT_TIME)) < tolerance);
+        assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log1.mTime - (now + TEST_UNIT_TIME * 1)) < tolerance);
         GameEventLog log2 = listener.mLogs.get(2);
         assertEquals("２回目のバウンドのイベントが発生していない", GameEvent.SECOND_BOUND, log2.mEvent);
         assertTrue("２回目のバウンドのイベントの時間がずれている", Math.abs(log2.mTime - (now + TEST_UNIT_TIME * 2)) < tolerance);
@@ -109,10 +109,10 @@ public class GameTest {
         assertEquals("発生するイベントの数が異なる", 5, listener.mLogs.size());
         GameEventLog log3 = listener.mLogs.get(3);
         assertEquals("リターンイベントが発生していない", GameEvent.RETURN, log3.mEvent);
-        assertTrue("リターンイベントの時間がずれている", Math.abs(log3.mTime - (now + 3)) < tolerance);
+        assertTrue("リターンイベントの時間がずれている", Math.abs(log3.mTime - (now + TEST_UNIT_TIME * 3)) < tolerance);
         GameEventLog log4 = listener.mLogs.get(4);
         assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.FIRST_BOUND, log4.mEvent);
-        assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log4.mTime - (now + TEST_UNIT_TIME)) < tolerance);
+        assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log4.mTime - (now + TEST_UNIT_TIME * 5)) < tolerance);
 
         game.shutdown();
     }

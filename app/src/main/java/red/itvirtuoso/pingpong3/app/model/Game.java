@@ -56,10 +56,30 @@ public abstract class Game {
     }
 
     public void swing(PlayerType type) {
+        switch (type) {
+            case SELF:
+                swingAsSelf();
+                break;
+            case RIVAL:
+                swingAsRival();
+                break;
+            default:
+                /* nop */
+        }
+    }
+
+    private void swingAsSelf() {
         synchronized (mReserves) {
             mReserves.add(new Reserve(0, GameEvent.SERVE));
             mReserves.add(new Reserve(mUnitTime * 1, GameEvent.FIRST_BOUND));
             mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND));
+        }
+    }
+
+    private void swingAsRival() {
+        synchronized (mReserves) {
+            mReserves.add(new Reserve(0, GameEvent.RETURN));
+            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.FIRST_BOUND));
         }
     }
 
