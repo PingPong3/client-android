@@ -8,4 +8,5 @@ public enum GameEvent {
     SERVE,
     FIRST_BOUND,
     SECOND_BOUND,
+    RETURN,
 }
