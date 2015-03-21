@@ -67,8 +67,10 @@ public class GameTest {
         long tolerance = game.getTolerance();
         game.addListener(listener);
         game.start();
-        game.swing(PlayerType.SELF);
         long now = System.currentTimeMillis();
+
+        /* 自分のサーブ */
+        game.swing(PlayerType.SELF);
         Thread.sleep(TEST_UNIT_TIME * 3);
 
         /* イベントの内容とタイミングを確認する */
@@ -87,9 +89,9 @@ public class GameTest {
     }
 
     @Test
-    public void 相手がリターンに成功() throws Exception {
+    public void 相手がリターンに成功して自分がリターンに失敗() throws Exception {
         /*
-         * 最初の３回のイベントは「自分がサーブを打って〜」のテストで実施済み
+         * 最初の３回のイベントは「自分がサーブを打って相手がリターンに失敗」のテストで実施済み
          * ４回目以降は次の順序でイベントが発生する
          * 150ms ... リターン
          * 250ms ... １回目のバウンド
@@ -99,9 +101,12 @@ public class GameTest {
         long tolerance = game.getTolerance();
         game.addListener(listener);
         game.start();
-        game.swing(PlayerType.SELF);
         long now = System.currentTimeMillis();
+
+        /* 自分のサーブ */
+        game.swing(PlayerType.SELF);
         Thread.sleep(TEST_UNIT_TIME * 3);
+        /* 相手のリターン */
         game.swing(PlayerType.RIVAL);
         Thread.sleep(TEST_UNIT_TIME * 3);
 
@@ -113,6 +118,43 @@ public class GameTest {
         GameEventLog log4 = listener.mLogs.get(4);
         assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.FIRST_BOUND, log4.mEvent);
         assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log4.mTime - (now + TEST_UNIT_TIME * 5)) < tolerance);
+
+        game.shutdown();
+    }
+
+    @Test
+    public void 自分がリターンに成功して相手がリターンに失敗() throws Exception {
+        /*
+         * 最初の５回のイベントは「相手がリターンに成功して自分がリターンに失敗」のテストで実施済み
+         * ６回目以降は次の順序でイベントが発生する
+         * 300ms ... リターン
+         * 400ms ... １回目のバウンド
+         */
+        GameActionEx listener = new GameActionEx();
+        Game game = new GameEx();
+        long tolerance = game.getTolerance();
+        game.addListener(listener);
+        game.start();
+        long now = System.currentTimeMillis();
+
+        /* 自分のサーブ */
+        game.swing(PlayerType.SELF);
+        Thread.sleep(TEST_UNIT_TIME * 3);
+        /* 相手のリターン */
+        game.swing(PlayerType.RIVAL);
+        Thread.sleep(TEST_UNIT_TIME * 3);
+        /* 自分のリターン */
+        game.swing(PlayerType.SELF);
+        Thread.sleep(TEST_UNIT_TIME * 3);
+
+        /* イベントの内容とタイミングを確認する */
+        assertEquals("発生するイベントの数が異なる", 7, listener.mLogs.size());
+        GameEventLog log5 = listener.mLogs.get(5);
+        assertEquals("リターンイベントが発生していない", GameEvent.RETURN, log5.mEvent);
+        assertTrue("リターンイベントの時間がずれている", Math.abs(log5.mTime - (now + TEST_UNIT_TIME * 6)) < tolerance);
+        GameEventLog log6 = listener.mLogs.get(6);
+        assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.FIRST_BOUND, log6.mEvent);
+        assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log6.mTime - (now + TEST_UNIT_TIME * 8)) < tolerance);
 
         game.shutdown();
     }
