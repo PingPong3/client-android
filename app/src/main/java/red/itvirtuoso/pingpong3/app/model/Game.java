@@ -23,6 +23,7 @@ public abstract class Game {
     private Set<GameAction> mListeners = new HashSet<>();
     private ScheduledExecutorService mService;
     private List<Reserve> mReserves = new ArrayList<>();
+    private GameEvent mLastEvent = GameEvent.READY;
 
     private class Reserve {
         private long mTime;
@@ -56,31 +57,34 @@ public abstract class Game {
     }
 
     public void swing(PlayerType type) {
-        switch (type) {
-            case SELF:
-                swingAsSelf();
-                break;
-            case RIVAL:
-                swingAsRival();
-                break;
-            default:
+        synchronized (mReserves) {
+            switch (type) {
+                case SELF:
+                    swingAsSelf();
+                    break;
+                case RIVAL:
+                    swingAsRival();
+                    break;
+                default:
                 /* nop */
+            }
         }
     }
 
     private void swingAsSelf() {
-        synchronized (mReserves) {
+        if (mLastEvent == GameEvent.READY) {
             mReserves.add(new Reserve(0, GameEvent.SERVE));
             mReserves.add(new Reserve(mUnitTime * 1, GameEvent.FIRST_BOUND));
             mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND));
+        } else if (mLastEvent == GameEvent.FIRST_BOUND) {
+            mReserves.add(new Reserve(0, GameEvent.RETURN));
+            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.FIRST_BOUND));
         }
     }
 
     private void swingAsRival() {
-        synchronized (mReserves) {
-            mReserves.add(new Reserve(0, GameEvent.RETURN));
-            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.FIRST_BOUND));
-        }
+        mReserves.add(new Reserve(0, GameEvent.RETURN));
+        mReserves.add(new Reserve(mUnitTime * 2, GameEvent.FIRST_BOUND));
     }
 
     public void addListener(GameAction listener) {
@@ -107,7 +111,10 @@ public abstract class Game {
                     }
                     actionedList.add(reserve);
                 }
-                mReserves.removeAll(actionedList);
+                if (actionedList.size() > 0) {
+                    mReserves.removeAll(actionedList);
+                    mLastEvent = actionedList.get(actionedList.size() - 1).mEvent;
+                }
             }
         }
     }
