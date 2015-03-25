@@ -1,5 +1,7 @@
 package red.itvirtuoso.pingpong3.app.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.concurrent.TimeUnit;
  * Created by kenji on 15/03/12.
  */
 public abstract class Game {
+    private static final String TAG = Game.class.getName();
+
     private static final int DEFAULT_UNIT_TIME = 500;
     private static final int FRAME_RATE = 60;
     private static final int WAIT_TIME = 1000 / FRAME_RATE;
@@ -28,10 +32,12 @@ public abstract class Game {
     private class Reserve {
         private long mTime;
         private GameEvent mEvent;
+        private PlayerType mType;
 
-        private Reserve(long delayTime, GameEvent event) {
+        private Reserve(long delayTime, GameEvent event, PlayerType type) {
             mTime = delayTime + System.currentTimeMillis();
             mEvent = event;
+            mType = type;
         }
     }
 
@@ -41,6 +47,10 @@ public abstract class Game {
 
     public Game(int unitTime) {
         mUnitTime = unitTime;
+    }
+
+    public int getUnitTime() {
+        return mUnitTime;
     }
 
     public long getTolerance() {
@@ -72,19 +82,26 @@ public abstract class Game {
     }
 
     private void swingAsSelf() {
+        Log.d(TAG, "lastEvent = " + mLastEvent);
         if (mLastEvent == GameEvent.READY) {
-            mReserves.add(new Reserve(0, GameEvent.SERVE));
-            mReserves.add(new Reserve(mUnitTime * 1, GameEvent.FIRST_BOUND));
-            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND));
-        } else if (mLastEvent == GameEvent.FIRST_BOUND) {
-            mReserves.add(new Reserve(0, GameEvent.RETURN));
-            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.FIRST_BOUND));
+            mReserves.add(new Reserve(0, GameEvent.SERVE, PlayerType.SELF));
+            mReserves.add(new Reserve(mUnitTime * 1, GameEvent.FIRST_BOUND, PlayerType.SELF));
+            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND, PlayerType.SELF));
+            mReserves.add(new Reserve(mUnitTime * 3, GameEvent.RETURN, PlayerType.RIVAL));
+            mReserves.add(new Reserve(mUnitTime * 5, GameEvent.SECOND_BOUND, PlayerType.RIVAL));
+        } else if (mLastEvent == GameEvent.SECOND_BOUND) {
+            mReserves.add(new Reserve(0, GameEvent.RETURN, PlayerType.SELF));
+            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND, PlayerType.SELF));
+            mReserves.add(new Reserve(mUnitTime * 3, GameEvent.RETURN, PlayerType.RIVAL));
+            mReserves.add(new Reserve(mUnitTime * 5, GameEvent.SECOND_BOUND, PlayerType.RIVAL));
         }
     }
 
     private void swingAsRival() {
-        mReserves.add(new Reserve(0, GameEvent.RETURN));
-        mReserves.add(new Reserve(mUnitTime * 2, GameEvent.FIRST_BOUND));
+        if (mLastEvent == GameEvent.SECOND_BOUND) {
+            mReserves.add(new Reserve(0, GameEvent.RETURN, PlayerType.RIVAL));
+            mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND, PlayerType.RIVAL));
+        }
     }
 
     public void addListener(GameAction listener) {
@@ -107,7 +124,7 @@ public abstract class Game {
                         continue;
                     }
                     for (GameAction listener : mListeners) {
-                        listener.onGameAction(reserve.mEvent);
+                        listener.onGameAction(reserve.mEvent, reserve.mType);
                     }
                     actionedList.add(reserve);
                 }

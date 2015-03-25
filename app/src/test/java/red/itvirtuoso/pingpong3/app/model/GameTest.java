@@ -22,10 +22,12 @@ public class GameTest {
 
     private class GameEventLog {
         private GameEvent mEvent;
+        private PlayerType mType;
         private long mTime;
 
-        private GameEventLog(GameEvent event, long time) {
+        private GameEventLog(GameEvent event, PlayerType type, long time) {
             mEvent = event;
+            mType = type;
             mTime = time;
         }
     }
@@ -34,8 +36,8 @@ public class GameTest {
         private List<GameEventLog> mLogs = new ArrayList<>();
 
         @Override
-        public void onGameAction(GameEvent event) {
-            mLogs.add(new GameEventLog(event, System.currentTimeMillis()));
+        public void onGameAction(GameEvent event, PlayerType type) {
+            mLogs.add(new GameEventLog(event, type, System.currentTimeMillis()));
         }
     }
 
@@ -77,12 +79,15 @@ public class GameTest {
         assertEquals("発生するイベント数が異なる", 3, listener.mLogs.size());
         GameEventLog log0 = listener.mLogs.get(0);
         assertEquals("サーブイベントが発生していない", GameEvent.SERVE, log0.mEvent);
+        assertEquals("サーブイベントの対象者が異なる", PlayerType.SELF, log0.mType);
         assertTrue("サーブイベントの時間がずれている", Math.abs(log0.mTime - (now + TEST_UNIT_TIME * 0)) < tolerance);
         GameEventLog log1 = listener.mLogs.get(1);
         assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.FIRST_BOUND, log1.mEvent);
+        assertEquals("１回目のバウンドの対象者が異なる", PlayerType.SELF, log1.mType);
         assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log1.mTime - (now + TEST_UNIT_TIME * 1)) < tolerance);
         GameEventLog log2 = listener.mLogs.get(2);
         assertEquals("２回目のバウンドのイベントが発生していない", GameEvent.SECOND_BOUND, log2.mEvent);
+        assertEquals("２回目のバウンドの対象者が異なる", PlayerType.SELF, log2.mType);
         assertTrue("２回目のバウンドのイベントの時間がずれている", Math.abs(log2.mTime - (now + TEST_UNIT_TIME * 2)) < tolerance);
 
         game.shutdown();
@@ -114,9 +119,11 @@ public class GameTest {
         assertEquals("発生するイベントの数が異なる", 5, listener.mLogs.size());
         GameEventLog log3 = listener.mLogs.get(3);
         assertEquals("リターンイベントが発生していない", GameEvent.RETURN, log3.mEvent);
+        assertEquals("リターンイベントの対象者が異なる  ", PlayerType.RIVAL, log3.mType);
         assertTrue("リターンイベントの時間がずれている", Math.abs(log3.mTime - (now + TEST_UNIT_TIME * 3)) < tolerance);
         GameEventLog log4 = listener.mLogs.get(4);
-        assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.FIRST_BOUND, log4.mEvent);
+        assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.SECOND_BOUND, log4.mEvent);
+        assertEquals("１回目のバウンドの対象者が異なる", PlayerType.RIVAL, log4.mType);
         assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log4.mTime - (now + TEST_UNIT_TIME * 5)) < tolerance);
 
         game.shutdown();
@@ -151,9 +158,10 @@ public class GameTest {
         assertEquals("発生するイベントの数が異なる", 7, listener.mLogs.size());
         GameEventLog log5 = listener.mLogs.get(5);
         assertEquals("リターンイベントが発生していない", GameEvent.RETURN, log5.mEvent);
+        assertEquals("リターンイベントの対象者が異なる", PlayerType.SELF, log5.mType);
         assertTrue("リターンイベントの時間がずれている", Math.abs(log5.mTime - (now + TEST_UNIT_TIME * 6)) < tolerance);
         GameEventLog log6 = listener.mLogs.get(6);
-        assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.FIRST_BOUND, log6.mEvent);
+        assertEquals("１回目のバウンドのイベントが発生していない", GameEvent.SECOND_BOUND, log6.mEvent);
         assertTrue("１回目のバウンドのイベントの時間がずれている", Math.abs(log6.mTime - (now + TEST_UNIT_TIME * 8)) < tolerance);
 
         game.shutdown();

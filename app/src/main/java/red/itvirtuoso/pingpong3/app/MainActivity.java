@@ -2,6 +2,7 @@ package red.itvirtuoso.pingpong3.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.model.Game;
@@ -30,6 +31,7 @@ public class MainActivity extends Activity implements
 
         /* TODO: プレイスタイルは変更できるようにする */
         mGame = new SingleGame();
+        mGame.start();
     }
 
     @Override
@@ -49,6 +51,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onSwing() {
+        Log.d(TAG, "onSwing");
         mGame.swing(PlayerType.SELF);
     }
 }

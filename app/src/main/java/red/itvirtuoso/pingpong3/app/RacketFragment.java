@@ -19,6 +19,7 @@ import java.util.List;
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.model.GameAction;
 import red.itvirtuoso.pingpong3.app.model.GameEvent;
+import red.itvirtuoso.pingpong3.app.model.PlayerType;
 
 public class RacketFragment extends Fragment implements SensorEventListener, GameAction {
     private OnFragmentInteractionListener mListener;
@@ -137,15 +138,20 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
     }
 
     @Override
-    public void onGameAction(GameEvent event) {
+    public void onGameAction(GameEvent event, PlayerType type) {
         switch (event) {
             case SERVE:
                 playSound(mRawKa);
                 break;
             case FIRST_BOUND:
-                /* fall through */
+                playSound(mRawKo);
+                break;
             case SECOND_BOUND:
                 playSound(mRawKo);
+                break;
+            case RETURN:
+                playSound(mRawKa);
+                break;
             default:
                 /* nop */
         }
