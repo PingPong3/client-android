@@ -1,0 +1,8 @@
+1. Install graphviz into mac
+$ brew install graphviz
+
+2. Create png file from dot file
+$ dot -Tpng  server.dot -o server.png
+
+3. Show png file
+$ open server.png  

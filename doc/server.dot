@@ -1,0 +1,37 @@
+digraph G {
+    node [shape="box", style="rounded"];
+    begin [label="" shape="circle"]
+    matching [label="対戦相手待ち"]
+    p1_wait [label="Player1待ち"]
+    p1_serve [label="Player1サーブ"]
+    p1_return [label="Player1リターン"]
+    p1_waitret [label="Player2\n対応待ち" shape="diamond"]
+    p1_checkpoint [label="Player1加点" shape="diamond"]
+    p2_wait [label="Player2待ち"]
+    p2_serve [label="Player2サーブ"]
+    p2_return [label="Player2リターン"]
+    p2_waitret [label="Player1\n対応待ち" shape="diamond"]
+    p2_checkpoint [label="Player2加点" shape="diamond"]
+    finish [lanel="ゲーム終了"]
+
+    begin -> matching [label="一人目接続"]
+    matching -> p1_wait [label="二人目接続"]
+    p1_wait -> p1_serve [label="Player1スイング"]
+    p1_serve -> p1_waitret
+    p1_return -> p1_waitret
+    p1_waitret -> p2_return [label="Player2スイング"]
+    p1_waitret -> p1_checkpoint [label="Player2空振り"]
+    p1_checkpoint -> p1_wait [label="続行"]
+    p1_checkpoint -> finish [label="終了"]
+    p2_wait -> p2_serve [label="Player2スイング"]
+    p2_serve -> p2_waitret
+    p2_return -> p2_waitret
+    p2_waitret -> p1_return [label="Player1スイング"]
+    p2_waitret -> p2_checkpoint [label="Player1空振り"]
+    p2_checkpoint -> p2_wait [label="続行"]
+    p2_checkpoint -> finish [label="終了"]
+
+    { rank=same; p1_wait; p2_wait }
+    { rank=same; p1_serve; p1_return; p2_serve; p2_return }
+}
+
