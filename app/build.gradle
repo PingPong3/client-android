@@ -19,7 +19,8 @@ android {
     }
     testOptions {
         unitTests.returnDefaultValues = true
-    }}
+    }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
