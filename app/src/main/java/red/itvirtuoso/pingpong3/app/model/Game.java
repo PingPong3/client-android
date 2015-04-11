@@ -87,13 +87,9 @@ public abstract class Game {
             mReserves.add(new Reserve(0, GameEvent.SERVE, PlayerType.SELF));
             mReserves.add(new Reserve(mUnitTime * 1, GameEvent.FIRST_BOUND, PlayerType.SELF));
             mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND, PlayerType.SELF));
-            mReserves.add(new Reserve(mUnitTime * 3, GameEvent.RETURN, PlayerType.RIVAL));
-            mReserves.add(new Reserve(mUnitTime * 5, GameEvent.SECOND_BOUND, PlayerType.RIVAL));
         } else if (mLastEvent == GameEvent.SECOND_BOUND) {
             mReserves.add(new Reserve(0, GameEvent.RETURN, PlayerType.SELF));
             mReserves.add(new Reserve(mUnitTime * 2, GameEvent.SECOND_BOUND, PlayerType.SELF));
-            mReserves.add(new Reserve(mUnitTime * 3, GameEvent.RETURN, PlayerType.RIVAL));
-            mReserves.add(new Reserve(mUnitTime * 5, GameEvent.SECOND_BOUND, PlayerType.RIVAL));
         }
     }
 
