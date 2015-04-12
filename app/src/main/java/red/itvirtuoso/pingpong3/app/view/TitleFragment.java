@@ -1,4 +1,4 @@
-package red.itvirtuoso.pingpong3.app;
+package red.itvirtuoso.pingpong3.app.view;
 
 import android.app.Activity;
 import android.app.Fragment;

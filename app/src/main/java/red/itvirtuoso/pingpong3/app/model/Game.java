@@ -49,10 +49,6 @@ public abstract class Game {
         mUnitTime = unitTime;
     }
 
-    public int getUnitTime() {
-        return mUnitTime;
-    }
-
     public long getTolerance() {
         return TOLERANCE;
     }
@@ -76,7 +72,7 @@ public abstract class Game {
                     swingAsRival();
                     break;
                 default:
-                /* nop */
+                    /* nop */
             }
         }
     }

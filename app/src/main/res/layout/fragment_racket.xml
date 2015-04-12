@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="red.itvirtuoso.pingpong3.app.RacketFragment"
+    tools:context="red.itvirtuoso.pingpong3.app.view.RacketFragment"
     android:background="#ffff653a">
 
     <!-- TODO: Update blank fragment layout -->
