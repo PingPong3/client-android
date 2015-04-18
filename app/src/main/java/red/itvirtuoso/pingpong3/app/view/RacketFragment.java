@@ -17,11 +17,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import red.itvirtuoso.pingpong3.R;
-import red.itvirtuoso.pingpong3.app.model.GameAction;
-import red.itvirtuoso.pingpong3.app.model.GameEvent;
-import red.itvirtuoso.pingpong3.app.model.PlayerType;
 
-public class RacketFragment extends Fragment implements SensorEventListener, GameAction {
+public class RacketFragment extends Fragment implements SensorEventListener {
     private OnFragmentInteractionListener mListener;
 
     private SensorManager mSensorManager;
@@ -68,7 +65,6 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
-            mListener.onRacketAdd(this);
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -109,8 +105,6 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener.onRacketRemove(this);
-        mListener = null;
     }
 
     @Override
@@ -137,31 +131,7 @@ public class RacketFragment extends Fragment implements SensorEventListener, Gam
         }
     }
 
-    @Override
-    public void onGameAction(GameEvent event, PlayerType type) {
-        switch (event) {
-            case SERVE:
-                playSound(mRawKa);
-                break;
-            case FIRST_BOUND:
-                playSound(mRawKo);
-                break;
-            case SECOND_BOUND:
-                playSound(mRawKo);
-                break;
-            case RETURN:
-                playSound(mRawKa);
-                break;
-            default:
-                /* nop */
-        }
-    }
-
     public interface OnFragmentInteractionListener {
-        public void onRacketAdd(GameAction listener);
-
-        public void onRacketRemove(GameAction listener);
-
         public void onSwing();
     }
 }

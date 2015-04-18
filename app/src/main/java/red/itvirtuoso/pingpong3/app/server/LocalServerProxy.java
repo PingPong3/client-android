@@ -6,6 +6,7 @@ package red.itvirtuoso.pingpong3.app.server;
 public class LocalServerProxy extends ServerProxy {
     @Override
     public void connect(ServerListener listener) {
-
+        listener.onConnectSuccess();
+        listener.onReady();
     }
 }
