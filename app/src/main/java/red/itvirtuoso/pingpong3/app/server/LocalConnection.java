@@ -5,8 +5,9 @@ package red.itvirtuoso.pingpong3.app.server;
  */
 public class LocalConnection extends Connection {
     @Override
-    public void connect(ConnectionListener listener) {
-        listener.onConnectSuccess();
-        listener.onReady();
+    protected boolean onConnect() {
+        getListener().onConnectSuccess();
+        getListener().onReady();
+        return true;
     }
 }

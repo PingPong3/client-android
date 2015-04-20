@@ -10,8 +10,9 @@ public class ConnectionTest {
     private class TestConnection extends Connection {
 
         @Override
-        public void connect(ConnectionListener listener) {
-            super.connect(listener);
+        protected boolean onConnect() {
+            getListener().onConnectSuccess();
+            return true;
         }
     }
 
@@ -28,10 +29,10 @@ public class ConnectionTest {
         }
     }
 
-    @Test
-    public void 接続するとステータスがconnectedになる() throws Exception {
+    @Test(timeout = 1)
+    public void 接続するとisConnectedプロパティがtrueになる() throws Exception {
         Connection connection = new TestConnection();
-        assertFalse("接続していないのにステータスがconnectedになっている", !connection.isConnected());
+        assertFalse("接続していないのにステータスがconnectedになっている", connection.isConnected());
         class TestListener extends AbstractConnectionListener {
             private boolean mIsCallOnConnectSuccess = false;
 
@@ -45,6 +46,6 @@ public class ConnectionTest {
         while (!listener.mIsCallOnConnectSuccess) {
             Thread.yield();
         }
-        assertFalse("接続しているのにステータスがconnectedになっていない", connection.isConnected());
+        assertTrue("接続しているのにステータスがconnectedになっていない", connection.isConnected());
     }
 }
