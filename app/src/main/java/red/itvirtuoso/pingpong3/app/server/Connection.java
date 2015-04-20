@@ -13,7 +13,7 @@ public abstract class Connection {
     }
 
     public final void disconnect() {
-
+        mIsConnected = false;
     }
 
     public final boolean isConnected() {
