@@ -38,4 +38,29 @@ public class LocalConnectionTest {
         assertTrue("LocalServerに接続されなかった", listener.mOnConnectSuccessCalled);
         assertTrue("対戦相手の準備ができなかった", listener.mOnReadyCalled);
     }
+
+    @Test
+    public void ゲームサーバから切断する() throws Exception {
+        TestListener listener = new TestListener();
+        Connection connection = new LocalConnection();
+        connection.connect(listener);
+    }
+
+    @Test
+    public void ローカルサーバでサーブを行う() throws Exception {
+        /*
+         * ローカルサーバに対してサーブを行うと、次のイベントが順に発生する
+         * <ul>
+         *     <li>サーブ</li>
+         *     <li>自陣でのバウンド</li>
+         *     <li>相手陣でのバウンド</li>
+         *     <li>相手のリターン</li>
+         *     <li>自陣でのバウンド</li>
+         * </ul>
+         */
+//        TestListener listener = new TestListener();
+//        Connection connection = new LocalConnection();
+//        connection.connect(listener);
+//        connection.serve();
+    }
 }
