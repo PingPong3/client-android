@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by kenji on 15/04/12.
  */
-public class LocalServerProxyTest {
-    private class TestServerListener implements ServerListener {
+public class LocalConnectionTest {
+    private class TestListener implements ConnectionListener {
         private boolean mOnConnectSuccessCalled = false;
         private boolean mOnReadyCalled = false;
 
@@ -22,6 +22,7 @@ public class LocalServerProxyTest {
             mOnReadyCalled = true;
         }
     }
+
     @Test
     public void ローカルのゲームサーバに接続する() throws Exception {
         /*
@@ -31,9 +32,9 @@ public class LocalServerProxyTest {
          *     <li>相手の準備ができる</li>
          * </ul>
          */
-        TestServerListener listener = new TestServerListener();
-        ServerProxy proxy = new LocalServerProxy();
-        proxy.connect(listener);
+        TestListener listener = new TestListener();
+        Connection connection = new LocalConnection();
+        connection.connect(listener);
         assertTrue("LocalServerに接続されなかった", listener.mOnConnectSuccessCalled);
         assertTrue("対戦相手の準備ができなかった", listener.mOnReadyCalled);
     }
