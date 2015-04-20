@@ -12,6 +12,10 @@ public abstract class Connection {
         mIsConnected = onConnect();
     }
 
+    public final void disconnect() {
+
+    }
+
     public final boolean isConnected() {
         return mIsConnected;
     }

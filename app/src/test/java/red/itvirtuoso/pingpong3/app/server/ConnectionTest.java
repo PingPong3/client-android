@@ -16,11 +16,12 @@ public class ConnectionTest {
         }
     }
 
-    private class AbstractConnectionListener implements ConnectionListener {
+    private class TestListener implements ConnectionListener {
+        private boolean mIsCallOnConnectSuccess = false;
 
         @Override
         public void onConnectSuccess() {
-            /* nop */
+            mIsCallOnConnectSuccess = true;
         }
 
         @Override
@@ -29,23 +30,27 @@ public class ConnectionTest {
         }
     }
 
-    @Test(timeout = 1)
+    @Test(timeout = 5)
     public void 接続するとisConnectedプロパティがtrueになる() throws Exception {
         Connection connection = new TestConnection();
         assertFalse("接続していないのにステータスがconnectedになっている", connection.isConnected());
-        class TestListener extends AbstractConnectionListener {
-            private boolean mIsCallOnConnectSuccess = false;
-
-            @Override
-            public void onConnectSuccess() {
-                mIsCallOnConnectSuccess = true;
-            }
-        };
         TestListener listener = new TestListener();
         connection.connect(listener);
         while (!listener.mIsCallOnConnectSuccess) {
             Thread.yield();
         }
         assertTrue("接続しているのにステータスがconnectedになっていない", connection.isConnected());
+    }
+
+    @Test(timeout = 5)
+    public void 切断するとisConnectedプロパティがfalseになる() throws Exception {
+        Connection connection = new TestConnection();
+        TestListener listener = new TestListener();
+        connection.connect(listener);
+        while (!listener.mIsCallOnConnectSuccess) {
+            Thread.yield();
+        }
+        connection.disconnect();
+        assertFalse("切断したのにステータスがconnectedになっている", connection.isConnected());
     }
 }
