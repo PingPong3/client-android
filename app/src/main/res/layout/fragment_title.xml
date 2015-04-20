@@ -1,5 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="red.itvirtuoso.pingpong3.app.view.TitleFragment">
 
-</FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/title_text"
+        android:text="@string/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/play_as_local"
+        android:id="@+id/play_as_local_button"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/title_text"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/play_as_internet"
+        android:id="@+id/play_as_internet_button"
+        android:layout_marginTop="39dp"
+        android:layout_below="@+id/play_as_local_button"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

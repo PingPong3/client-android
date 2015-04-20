@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PingPong 3</string>
+    <string name="title">Ping Pong Game</string>
+    <string name="play_as_local">Play as local</string>
+    <string name="play_as_internet">Play as Internet</string>
 </resources>

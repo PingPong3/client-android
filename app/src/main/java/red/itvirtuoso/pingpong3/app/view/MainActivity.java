@@ -18,7 +18,7 @@ public class MainActivity extends Activity implements
         setContentView(R.layout.activity_title);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, RacketFragment.newInstance())
+                    .add(R.id.container, TitleFragment.newInstance())
                     .commit();
         }
     }

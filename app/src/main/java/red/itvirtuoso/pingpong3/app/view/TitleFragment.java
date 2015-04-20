@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import red.itvirtuoso.pingpong3.R;
 
 public class TitleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private Button mPlayAsLocalButton;
+    private Button mPlayAsInternetButton;
 
     public static TitleFragment newInstance() {
         TitleFragment fragment = new TitleFragment();
@@ -25,7 +28,10 @@ public class TitleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_title, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_title, container, false);
+        mPlayAsLocalButton = (Button) rootView.findViewById(R.id.play_as_local_button);
+        mPlayAsInternetButton = (Button) rootView.findViewById(R.id.play_as_internet_button);
+        return rootView;
     }
 
     @Override
