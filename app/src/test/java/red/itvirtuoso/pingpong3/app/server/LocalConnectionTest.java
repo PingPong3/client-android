@@ -3,11 +3,9 @@ package red.itvirtuoso.pingpong3.app.server;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by kenji on 15/04/12.
@@ -17,29 +15,55 @@ public class LocalConnectionTest {
         ConnectSuccess, Ready, BoundMyArea, BoundRivalArea, Return,
     }
 
-    private class Event {
+    private class EventBuilder {
         private long time;
+
+        private EventBuilder() {
+            this.time = System.currentTimeMillis();
+        }
+
+        public Event create(EventType eventType) {
+            return new Event(System.currentTimeMillis() - time, eventType);
+        }
+    }
+
+    private class Event {
+        private long delta;
         private EventType eventType;
 
-        private Event(EventType eventType) {
-            this.time = System.currentTimeMillis();
+        private Event(long time, EventType eventType) {
+            /* 10ミリ秒以内は誤差として同一視する */
+            this.delta = time / 10;
             this.eventType = eventType;
         }
 
-        public long getTime() {
-            return this.time;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Event event = (Event) o;
+
+            if (delta != event.delta) return false;
+            if (eventType != event.eventType) return false;
+
+            return true;
         }
 
-        public EventType getEventType() {
-            return this.eventType;
+        @Override
+        public int hashCode() {
+            int result = (int) (delta ^ (delta >>> 32));
+            result = 31 * result + (eventType != null ? eventType.hashCode() : 0);
+            return result;
         }
     }
 
     private class TestListener implements ConnectionListener {
         private ArrayList<Event> events = new ArrayList<>();
+        private EventBuilder builder = new EventBuilder();
 
         private void addEvent(EventType eventType) {
-            this.events.add(new Event(eventType));
+            this.events.add(builder.create(eventType));
         }
 
         @Override
@@ -80,15 +104,11 @@ public class LocalConnectionTest {
         TestListener listener = new TestListener();
         Connection connection = new LocalConnection();
         connection.connect(listener);
-        Event event = null;
-        List<Event> events = listener.events;
-        Iterator<Event> iterator = events.iterator();
 
-        assertEquals("発生したイベントの数が異なる", 2, events.size());
-        event = iterator.next();
-        assertSame("LocalServerに接続されなかった", EventType.ConnectSuccess, event.getEventType());
-        event = iterator.next();
-        assertSame("対戦相手の準備ができなかった", EventType.Ready, event.getEventType());
+        assertThat(listener.events, hasItems(
+                        new Event(0, EventType.ConnectSuccess),
+                        new Event(0, EventType.Ready))
+        );
     }
 
     @Test
