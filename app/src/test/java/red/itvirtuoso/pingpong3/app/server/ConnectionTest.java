@@ -1,7 +1,9 @@
 package red.itvirtuoso.pingpong3.app.server;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by kenji on 15/04/21.
@@ -14,18 +16,36 @@ public class ConnectionTest {
             getListener().onConnectSuccess();
             return true;
         }
+
+        @Override
+        public void serve() {
+            /* nop */
+        }
     }
 
     private class TestListener implements ConnectionListener {
-        private boolean mIsCallOnConnectSuccess = false;
-
         @Override
         public void onConnectSuccess() {
-            mIsCallOnConnectSuccess = true;
+            /* nop */
         }
 
         @Override
         public void onReady() {
+            /* nop */
+        }
+
+        @Override
+        public void onBoundMyArea() {
+            /* nop */
+        }
+
+        @Override
+        public void onBoundRivalArea() {
+            /* nop */
+        }
+
+        @Override
+        public void onReturn() {
             /* nop */
         }
     }
@@ -36,9 +56,6 @@ public class ConnectionTest {
         assertFalse("接続していないのにステータスがconnectedになっている", connection.isConnected());
         TestListener listener = new TestListener();
         connection.connect(listener);
-        while (!listener.mIsCallOnConnectSuccess) {
-            Thread.yield();
-        }
         assertTrue("接続しているのにステータスがconnectedになっていない", connection.isConnected());
     }
 
@@ -47,9 +64,6 @@ public class ConnectionTest {
         Connection connection = new TestConnection();
         TestListener listener = new TestListener();
         connection.connect(listener);
-        while (!listener.mIsCallOnConnectSuccess) {
-            Thread.yield();
-        }
         connection.disconnect();
         assertFalse("切断したのにステータスがconnectedになっている", connection.isConnected());
     }

@@ -10,4 +10,9 @@ public class LocalConnection extends Connection {
         getListener().onReady();
         return true;
     }
+
+    @Override
+    public void serve() {
+
+    }
 }

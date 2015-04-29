@@ -2,24 +2,69 @@ package red.itvirtuoso.pingpong3.app.server;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 /**
  * Created by kenji on 15/04/12.
  */
 public class LocalConnectionTest {
+    private enum EventType {
+        ConnectSuccess, Ready, BoundMyArea, BoundRivalArea, Return,
+    }
+
+    private class Event {
+        private long time;
+        private EventType eventType;
+
+        private Event(EventType eventType) {
+            this.time = System.currentTimeMillis();
+            this.eventType = eventType;
+        }
+
+        public long getTime() {
+            return this.time;
+        }
+
+        public EventType getEventType() {
+            return this.eventType;
+        }
+    }
+
     private class TestListener implements ConnectionListener {
-        private boolean mOnConnectSuccessCalled = false;
-        private boolean mOnReadyCalled = false;
+        private ArrayList<Event> events = new ArrayList<>();
+
+        private void addEvent(EventType eventType) {
+            this.events.add(new Event(eventType));
+        }
 
         @Override
         public void onConnectSuccess() {
-            mOnConnectSuccessCalled = true;
+            addEvent(EventType.ConnectSuccess);
         }
 
         @Override
         public void onReady() {
-            mOnReadyCalled = true;
+            addEvent(EventType.Ready);
+        }
+
+        @Override
+        public void onBoundMyArea() {
+            addEvent(EventType.BoundMyArea);
+        }
+
+        @Override
+        public void onBoundRivalArea() {
+            addEvent(EventType.BoundRivalArea);
+        }
+
+        @Override
+        public void onReturn() {
+            addEvent(EventType.Return);
         }
     }
 
@@ -35,15 +80,15 @@ public class LocalConnectionTest {
         TestListener listener = new TestListener();
         Connection connection = new LocalConnection();
         connection.connect(listener);
-        assertTrue("LocalServerに接続されなかった", listener.mOnConnectSuccessCalled);
-        assertTrue("対戦相手の準備ができなかった", listener.mOnReadyCalled);
-    }
+        Event event = null;
+        List<Event> events = listener.events;
+        Iterator<Event> iterator = events.iterator();
 
-    @Test
-    public void ゲームサーバから切断する() throws Exception {
-        TestListener listener = new TestListener();
-        Connection connection = new LocalConnection();
-        connection.connect(listener);
+        assertEquals("発生したイベントの数が異なる", 2, events.size());
+        event = iterator.next();
+        assertSame("LocalServerに接続されなかった", EventType.ConnectSuccess, event.getEventType());
+        event = iterator.next();
+        assertSame("対戦相手の準備ができなかった", EventType.Ready, event.getEventType());
     }
 
     @Test
@@ -58,9 +103,9 @@ public class LocalConnectionTest {
          *     <li>自陣でのバウンド</li>
          * </ul>
          */
-//        TestListener listener = new TestListener();
-//        Connection connection = new LocalConnection();
-//        connection.connect(listener);
-//        connection.serve();
+        TestListener listener = new TestListener();
+        Connection connection = new LocalConnection();
+        connection.connect(listener);
+        connection.serve();
     }
 }

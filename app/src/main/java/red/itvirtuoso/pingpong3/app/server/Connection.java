@@ -7,6 +7,8 @@ public abstract class Connection {
     private ConnectionListener mListener;
     private boolean mIsConnected = false;
 
+    protected abstract boolean onConnect();
+
     public final void connect(ConnectionListener listener) {
         mListener = listener;
         mIsConnected = onConnect();
@@ -24,5 +26,5 @@ public abstract class Connection {
         return mListener;
     }
 
-    protected abstract boolean onConnect();
+    public abstract void serve();
 }
