@@ -3,6 +3,7 @@ package red.itvirtuoso.pingpong3.app.server;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,8 +12,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by kenji on 15/04/12.
  */
 public class LocalConnectionTest {
+    private static final long UNIT_TIME = 10;
+
     private enum EventType {
-        ConnectSuccess, Ready, BoundMyArea, BoundRivalArea, Return,
+        ConnectSuccess, Ready, Serve, BoundMyArea, BoundRivalArea, Return, PointRival,
     }
 
     private class EventBuilder {
@@ -77,6 +80,11 @@ public class LocalConnectionTest {
         }
 
         @Override
+        public void onServe() {
+            addEvent(EventType.Serve);
+        }
+
+        @Override
         public void onBoundMyArea() {
             addEvent(EventType.BoundMyArea);
         }
@@ -90,6 +98,11 @@ public class LocalConnectionTest {
         public void onReturn() {
             addEvent(EventType.Return);
         }
+
+        @Override
+        public void onPointRival() {
+            addEvent(EventType.PointRival);
+        }
     }
 
     @Test
@@ -97,35 +110,55 @@ public class LocalConnectionTest {
         /*
          * ローカルのゲームサーバに接続すると、次の順に瞬時にイベントが発生する
          * <ul>
-         *     <li>接続に成功する</li>
-         *     <li>相手の準備ができる</li>
+         *     <li>0, 接続に成功する</li>
+         *     <li>0, 相手の準備ができる</li>
          * </ul>
          */
-        TestListener listener = new TestListener();
         Connection connection = new LocalConnection();
+        TestListener listener = new TestListener();
         connection.connect(listener);
 
         assertThat(listener.events, hasItems(
-                        new Event(0, EventType.ConnectSuccess),
-                        new Event(0, EventType.Ready))
-        );
+                new Event(0, EventType.ConnectSuccess),
+                new Event(0, EventType.Ready)
+        ));
     }
 
-    @Test
+    @Test(timeout = 5000)
     public void ローカルサーバでサーブを行う() throws Exception {
         /*
          * ローカルサーバに対してサーブを行うと、次のイベントが順に発生する
          * <ul>
-         *     <li>サーブ</li>
-         *     <li>自陣でのバウンド</li>
-         *     <li>相手陣でのバウンド</li>
-         *     <li>相手のリターン</li>
-         *     <li>自陣でのバウンド</li>
+         *     <li>0, サーブ</li>
+         *     <li>1, 自陣でのバウンド</li>
+         *     <li>2, 相手陣でのバウンド</li>
+         *     <li>3, 相手のリターン</li>
+         *     <li>5, 自陣でのバウンド</li>
+         *     <li>7, 相手の得点</li>
          * </ul>
          */
-        TestListener listener = new TestListener();
-        Connection connection = new LocalConnection();
+        final Connection connection = new LocalConnection();
+        TestListener listener = new TestListener() {
+            @Override
+            public void onPointRival() {
+                super.onPointRival();
+                connection.disconnect();
+            }
+        };
         connection.connect(listener);
         connection.serve();
+        while (connection.isConnected()) {
+            Thread.yield();
+        }
+
+        List<Event> events = listener.events.subList(2, listener.events.size());
+        assertThat(events, hasItems(
+                new Event(0 * UNIT_TIME, EventType.Serve),
+                new Event(1 * UNIT_TIME, EventType.BoundMyArea),
+                new Event(2 * UNIT_TIME, EventType.BoundRivalArea),
+                new Event(3 * UNIT_TIME, EventType.Return),
+                new Event(5 * UNIT_TIME, EventType.BoundMyArea),
+                new Event(7 * UNIT_TIME, EventType.PointRival)
+        ));
     }
 }

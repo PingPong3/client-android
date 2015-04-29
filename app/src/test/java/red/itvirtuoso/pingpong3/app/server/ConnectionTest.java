@@ -35,6 +35,11 @@ public class ConnectionTest {
         }
 
         @Override
+        public void onServe() {
+            /* nop */
+        }
+
+        @Override
         public void onBoundMyArea() {
             /* nop */
         }
@@ -48,9 +53,14 @@ public class ConnectionTest {
         public void onReturn() {
             /* nop */
         }
+
+        @Override
+        public void onPointRival() {
+            /* nop */
+        }
     }
 
-    @Test(timeout = 5)
+    @Test(timeout = 5000)
     public void 接続するとisConnectedプロパティがtrueになる() throws Exception {
         Connection connection = new TestConnection();
         assertFalse("接続していないのにステータスがconnectedになっている", connection.isConnected());
@@ -59,7 +69,7 @@ public class ConnectionTest {
         assertTrue("接続しているのにステータスがconnectedになっていない", connection.isConnected());
     }
 
-    @Test(timeout = 5)
+    @Test(timeout = 5000)
     public void 切断するとisConnectedプロパティがfalseになる() throws Exception {
         Connection connection = new TestConnection();
         TestListener listener = new TestListener();
