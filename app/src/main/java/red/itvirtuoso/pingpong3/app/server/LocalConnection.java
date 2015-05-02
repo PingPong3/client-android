@@ -18,7 +18,7 @@ public class LocalConnection extends Connection {
     }
 
     private void sleepStep(int step) throws InterruptedException {
-        Thread.sleep(step + this.unitTime);
+        Thread.sleep(step * this.unitTime);
     }
 
     @Override

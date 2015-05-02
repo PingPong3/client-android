@@ -5,14 +5,15 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 /**
  * Created by kenji on 15/04/12.
  */
 public class LocalConnectionTest {
-    private static final long UNIT_TIME = 10;
+    private static final long STEP_TIME = 50;
 
     private enum EventType {
         ConnectSuccess, Ready, Serve, BoundMyArea, BoundRivalArea, Return, PointRival,
@@ -30,17 +31,16 @@ public class LocalConnectionTest {
         }
 
         private Event create(int step, EventType eventType) {
-            return new Event(step * UNIT_TIME, eventType);
+            return new Event(step * STEP_TIME, eventType);
         }
     }
 
     private class Event {
-        private long delta;
+        private long step;
         private EventType eventType;
 
         private Event(long time, EventType eventType) {
-            /* 10ミリ秒以内は誤差として同一視する */
-            this.delta = time / 10;
+            this.step = time / STEP_TIME;
             this.eventType = eventType;
         }
 
@@ -51,7 +51,7 @@ public class LocalConnectionTest {
 
             Event event = (Event) o;
 
-            if (delta != event.delta) return false;
+            if (step != event.step) return false;
             if (eventType != event.eventType) return false;
 
             return true;
@@ -59,9 +59,14 @@ public class LocalConnectionTest {
 
         @Override
         public int hashCode() {
-            int result = (int) (delta ^ (delta >>> 32));
+            int result = (int) (step ^ (step >>> 32));
             result = 31 * result + (eventType != null ? eventType.hashCode() : 0);
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return step + ", " + eventType;
         }
     }
 
@@ -118,7 +123,7 @@ public class LocalConnectionTest {
          *     <li>0, 相手の準備ができる</li>
          * </ul>
          */
-        Connection connection = new LocalConnection(UNIT_TIME);
+        Connection connection = new LocalConnection(STEP_TIME);
         TestListener listener = new TestListener();
         connection.connect(listener);
 
@@ -142,7 +147,7 @@ public class LocalConnectionTest {
          *     <li>7, 相手の得点</li>
          * </ul>
          */
-        final Connection connection = new LocalConnection(UNIT_TIME);
+        final Connection connection = new LocalConnection(STEP_TIME);
         TestListener listener = new TestListener() {
             @Override
             public void onPointRival() {
@@ -158,13 +163,13 @@ public class LocalConnectionTest {
 
         List<Event> events = listener.events.subList(2, listener.events.size());
         EventBuilder builder = new EventBuilder();
-        assertThat(events, hasItems(
+        assertThat(events, is(contains(
                 builder.create(0, EventType.Serve),
                 builder.create(1, EventType.BoundMyArea),
                 builder.create(2, EventType.BoundRivalArea),
                 builder.create(3, EventType.Return),
                 builder.create(5, EventType.BoundMyArea),
                 builder.create(7, EventType.PointRival)
-        ));
+        )));
     }
 }
