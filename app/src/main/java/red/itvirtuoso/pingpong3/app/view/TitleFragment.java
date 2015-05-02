@@ -2,8 +2,6 @@ package red.itvirtuoso.pingpong3.app.view;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +10,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import red.itvirtuoso.pingpong3.R;
+import red.itvirtuoso.pingpong3.app.server.Connection;
+import red.itvirtuoso.pingpong3.app.server.LocalConnection;
 
 public class TitleFragment extends Fragment {
+    private static final long STEP_TIME = 1000;
+
     private OnFragmentInteractionListener mListener;
     private Button mPlayAsLocalButton;
     private Button mPlayAsInternetButton;
@@ -57,18 +59,11 @@ public class TitleFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-    }
-
     private class PlayAsLocalButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            FragmentManager manager = getFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            Fragment racketFragment = RacketFragment.newInstance();
-            transaction.replace(R.id.container, racketFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            LocalConnection connection = new LocalConnection(STEP_TIME);
+            mListener.start(connection);
         }
     }
 
@@ -77,5 +72,9 @@ public class TitleFragment extends Fragment {
         public void onClick(View v) {
             Toast.makeText(getActivity(), "インターネット対戦は作成中", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+        public void start(Connection connection);
     }
 }

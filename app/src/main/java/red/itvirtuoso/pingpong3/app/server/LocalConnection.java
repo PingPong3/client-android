@@ -22,15 +22,15 @@ public class LocalConnection extends Connection {
     }
 
     @Override
-    public void serve() {
+    public void swing() {
         try {
-            serveImpl();
+            swingImpl();
         } catch (InterruptedException e) {
             /* nop */
         }
     }
 
-    private void serveImpl() throws InterruptedException {
+    private void swingImpl() throws InterruptedException {
         ConnectionListener listener = getListener();
         listener.onServe();
         sleepStep(1);

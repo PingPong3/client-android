@@ -9,17 +9,26 @@ import static org.junit.Assert.assertTrue;
  * Created by kenji on 15/04/21.
  */
 public class ConnectionTest {
-    private class TestConnection extends Connection {
+    private class AbstractConnection extends Connection {
+
+        @Override
+        protected boolean onConnect() {
+            /* nop */
+            return false;
+        }
+
+        @Override
+        public void swing() {
+            /* nop */
+        }
+    }
+
+    private class TestConnection extends AbstractConnection {
 
         @Override
         protected boolean onConnect() {
             getListener().onConnectSuccess();
             return true;
-        }
-
-        @Override
-        public void serve() {
-            /* nop */
         }
     }
 
@@ -65,7 +74,8 @@ public class ConnectionTest {
         Connection connection = new TestConnection();
         assertFalse("接続していないのにステータスがconnectedになっている", connection.isConnected());
         TestListener listener = new TestListener();
-        connection.connect(listener);
+        connection.setListener(listener);
+        connection.connect();
         assertTrue("接続しているのにステータスがconnectedになっていない", connection.isConnected());
     }
 
@@ -73,7 +83,8 @@ public class ConnectionTest {
     public void 切断するとisConnectedプロパティがfalseになる() throws Exception {
         Connection connection = new TestConnection();
         TestListener listener = new TestListener();
-        connection.connect(listener);
+        connection.setListener(listener);
+        connection.connect();
         connection.disconnect();
         assertFalse("切断したのにステータスがconnectedになっている", connection.isConnected());
     }

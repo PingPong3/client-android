@@ -9,8 +9,11 @@ public abstract class Connection {
 
     protected abstract boolean onConnect();
 
-    public final void connect(ConnectionListener listener) {
+    public void setListener(ConnectionListener listener) {
         mListener = listener;
+    }
+
+    public final void connect() {
         mIsConnected = onConnect();
     }
 
@@ -26,5 +29,5 @@ public abstract class Connection {
         return mListener;
     }
 
-    public abstract void serve();
+    public abstract void swing();
 }

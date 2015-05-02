@@ -126,7 +126,8 @@ public class LocalConnectionTest {
          */
         Connection connection = new LocalConnection(STEP_TIME);
         TestListener listener = new TestListener();
-        connection.connect(listener);
+        connection.setListener(listener);
+        connection.connect();
 
         EventBuilder builder = new EventBuilder();
         assertThat(listener.events, is(contains(
@@ -156,8 +157,9 @@ public class LocalConnectionTest {
                 connection.disconnect();
             }
         };
-        connection.connect(listener);
-        connection.serve();
+        connection.setListener(listener);
+        connection.connect();
+        connection.swing();
         while (connection.isConnected()) {
             Thread.yield();
         }
