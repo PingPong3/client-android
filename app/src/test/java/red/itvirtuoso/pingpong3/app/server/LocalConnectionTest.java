@@ -19,14 +19,18 @@ public class LocalConnectionTest {
     }
 
     private class EventBuilder {
-        private long time;
+        private long beginTime;
 
         private EventBuilder() {
-            this.time = System.currentTimeMillis();
+            this.beginTime = System.currentTimeMillis();
         }
 
-        public Event create(EventType eventType) {
-            return new Event(System.currentTimeMillis() - time, eventType);
+        private Event create(EventType eventType) {
+            return new Event(System.currentTimeMillis() - beginTime, eventType);
+        }
+
+        private Event create(int step, EventType eventType) {
+            return new Event(step * UNIT_TIME, eventType);
         }
     }
 
@@ -114,13 +118,14 @@ public class LocalConnectionTest {
          *     <li>0, 相手の準備ができる</li>
          * </ul>
          */
-        Connection connection = new LocalConnection();
+        Connection connection = new LocalConnection(UNIT_TIME);
         TestListener listener = new TestListener();
         connection.connect(listener);
 
+        EventBuilder builder = new EventBuilder();
         assertThat(listener.events, hasItems(
-                new Event(0, EventType.ConnectSuccess),
-                new Event(0, EventType.Ready)
+                builder.create(0, EventType.ConnectSuccess),
+                builder.create(0, EventType.Ready)
         ));
     }
 
@@ -137,7 +142,7 @@ public class LocalConnectionTest {
          *     <li>7, 相手の得点</li>
          * </ul>
          */
-        final Connection connection = new LocalConnection();
+        final Connection connection = new LocalConnection(UNIT_TIME);
         TestListener listener = new TestListener() {
             @Override
             public void onPointRival() {
@@ -152,13 +157,14 @@ public class LocalConnectionTest {
         }
 
         List<Event> events = listener.events.subList(2, listener.events.size());
+        EventBuilder builder = new EventBuilder();
         assertThat(events, hasItems(
-                new Event(0 * UNIT_TIME, EventType.Serve),
-                new Event(1 * UNIT_TIME, EventType.BoundMyArea),
-                new Event(2 * UNIT_TIME, EventType.BoundRivalArea),
-                new Event(3 * UNIT_TIME, EventType.Return),
-                new Event(5 * UNIT_TIME, EventType.BoundMyArea),
-                new Event(7 * UNIT_TIME, EventType.PointRival)
+                builder.create(0, EventType.Serve),
+                builder.create(1, EventType.BoundMyArea),
+                builder.create(2, EventType.BoundRivalArea),
+                builder.create(3, EventType.Return),
+                builder.create(5, EventType.BoundMyArea),
+                builder.create(7, EventType.PointRival)
         ));
     }
 }
