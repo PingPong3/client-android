@@ -1,6 +1,10 @@
-package red.itvirtuoso.pingpong3.app.server;
+package red.itvirtuoso.pingpong3.app.net;
 
 import org.junit.Test;
+
+import red.itvirtuoso.pingpong3.app.net.Connection;
+import red.itvirtuoso.pingpong3.app.net.ConnectionListener;
+import red.itvirtuoso.pingpong3.app.server.Event;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

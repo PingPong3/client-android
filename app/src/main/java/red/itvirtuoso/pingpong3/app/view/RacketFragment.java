@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import red.itvirtuoso.pingpong3.R;
-import red.itvirtuoso.pingpong3.app.server.ConnectionListener;
+import red.itvirtuoso.pingpong3.app.net.ConnectionListener;
 import red.itvirtuoso.pingpong3.app.server.Event;
 
 public class RacketFragment extends Fragment implements SensorEventListener, ConnectionListener {

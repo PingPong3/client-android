@@ -1,9 +1,15 @@
-package red.itvirtuoso.pingpong3.app.server;
+package red.itvirtuoso.pingpong3.app.net;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import red.itvirtuoso.pingpong3.app.net.Connection;
+import red.itvirtuoso.pingpong3.app.net.ConnectionListener;
+import red.itvirtuoso.pingpong3.app.net.LocalConnection;
+import red.itvirtuoso.pingpong3.app.server.Event;
+import red.itvirtuoso.pingpong3.app.server.Turn;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;

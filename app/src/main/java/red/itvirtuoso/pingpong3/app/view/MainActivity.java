@@ -6,7 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import red.itvirtuoso.pingpong3.R;
-import red.itvirtuoso.pingpong3.app.server.Connection;
+import red.itvirtuoso.pingpong3.app.net.Connection;
 
 public class MainActivity extends Activity implements
         TitleFragment.OnFragmentInteractionListener,

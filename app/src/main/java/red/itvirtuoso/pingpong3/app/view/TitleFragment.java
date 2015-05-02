@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import red.itvirtuoso.pingpong3.R;
-import red.itvirtuoso.pingpong3.app.server.Connection;
-import red.itvirtuoso.pingpong3.app.server.LocalConnection;
+import red.itvirtuoso.pingpong3.app.net.Connection;
+import red.itvirtuoso.pingpong3.app.net.LocalConnection;
 
 public class TitleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
