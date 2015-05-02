@@ -17,8 +17,31 @@ public class LocalConnection extends Connection {
         return true;
     }
 
+    private void sleepStep(int step) throws InterruptedException {
+        Thread.sleep(step + this.unitTime);
+    }
+
     @Override
     public void serve() {
+        try {
+            serveImpl();
+        } catch (InterruptedException e) {
+            /* nop */
+        }
+    }
 
+    private void serveImpl() throws InterruptedException {
+        ConnectionListener listener = getListener();
+        listener.onServe();
+        sleepStep(1);
+        listener.onBoundMyArea();
+        sleepStep(1);
+        listener.onBoundRivalArea();
+        sleepStep(1);
+        listener.onReturn();
+        sleepStep(2);
+        listener.onBoundMyArea();
+        sleepStep(2);
+        listener.onPointRival();
     }
 }
