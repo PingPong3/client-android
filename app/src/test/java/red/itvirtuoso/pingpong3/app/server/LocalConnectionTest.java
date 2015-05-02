@@ -16,33 +16,33 @@ public class LocalConnectionTest {
     /* ゲームループの単位時間。テスト用に短くしている */
     private static final long STEP_TIME = 50;
 
-    private enum EventType {
+    private enum TestEventType {
         ConnectSuccess, Ready, Serve, BoundMyArea, BoundRivalArea, Return, PointRival,
     }
 
-    private class EventBuilder {
+    private class TestEventBuilder {
         private long beginTime;
 
-        private EventBuilder() {
+        private TestEventBuilder() {
             this.beginTime = System.currentTimeMillis();
         }
 
-        private Event create(EventType eventType) {
-            return new Event(System.currentTimeMillis() - beginTime, eventType);
+        private TestEvent create(TestEventType testEventType) {
+            return new TestEvent(System.currentTimeMillis() - beginTime, testEventType);
         }
 
-        private Event create(int step, EventType eventType) {
-            return new Event(step * STEP_TIME, eventType);
+        private TestEvent create(int step, TestEventType testEventType) {
+            return new TestEvent(step * STEP_TIME, testEventType);
         }
     }
 
-    private class Event {
+    private class TestEvent {
         private long step;
-        private EventType eventType;
+        private TestEventType testEventType;
 
-        private Event(long time, EventType eventType) {
+        private TestEvent(long time, TestEventType testEventType) {
             this.step = time / STEP_TIME;
-            this.eventType = eventType;
+            this.testEventType = testEventType;
         }
 
         @Override
@@ -50,10 +50,10 @@ public class LocalConnectionTest {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            Event event = (Event) o;
+            TestEvent testEvent = (TestEvent) o;
 
-            if (step != event.step) return false;
-            if (eventType != event.eventType) return false;
+            if (step != testEvent.step) return false;
+            if (testEventType != testEvent.testEventType) return false;
 
             return true;
         }
@@ -61,64 +61,64 @@ public class LocalConnectionTest {
         @Override
         public int hashCode() {
             int result = (int) (step ^ (step >>> 32));
-            result = 31 * result + (eventType != null ? eventType.hashCode() : 0);
+            result = 31 * result + (testEventType != null ? testEventType.hashCode() : 0);
             return result;
         }
 
         @Override
         public String toString() {
-            return step + ", " + eventType;
+            return step + ", " + testEventType;
         }
     }
 
     private class TestListener implements ConnectionListener {
-        private ArrayList<Event> events = new ArrayList<>();
-        private EventBuilder builder = new EventBuilder();
+        private ArrayList<TestEvent> testEvents = new ArrayList<>();
+        private TestEventBuilder builder = new TestEventBuilder();
 
-        private void addEvent(EventType eventType) {
-            this.events.add(builder.create(eventType));
+        private void addEvent(TestEventType testEventType) {
+            this.testEvents.add(builder.create(testEventType));
         }
 
         @Override
         public void onConnectSuccess() {
-            addEvent(EventType.ConnectSuccess);
+            addEvent(TestEventType.ConnectSuccess);
         }
 
         @Override
         public void onReady() {
-            addEvent(EventType.Ready);
+            addEvent(TestEventType.Ready);
         }
 
         @Override
-        public void onServe() {
-            addEvent(EventType.Serve);
+        public void onServe(Event event) {
+            addEvent(TestEventType.Serve);
         }
 
         @Override
-        public void onBoundMyArea() {
-            addEvent(EventType.BoundMyArea);
+        public void onBoundMyArea(Event event) {
+            addEvent(TestEventType.BoundMyArea);
         }
 
         @Override
-        public void onBoundRivalArea() {
-            addEvent(EventType.BoundRivalArea);
+        public void onBoundRivalArea(Event event) {
+            addEvent(TestEventType.BoundRivalArea);
         }
 
         @Override
-        public void onReturn() {
-            addEvent(EventType.Return);
+        public void onReturn(Event event) {
+            addEvent(TestEventType.Return);
         }
 
         @Override
         public void onPointRival() {
-            addEvent(EventType.PointRival);
+            addEvent(TestEventType.PointRival);
         }
     }
 
     @Test
-    public void ローカルのゲームサーバに接続する() throws Exception {
+    public void ゲームサーバに接続する() throws Exception {
         /*
-         * ローカルのゲームサーバに接続すると、次の順に瞬時にイベントが発生する
+         * 次のイベントが順に発生する
          * <ul>
          *     <li>0, 接続に成功する</li>
          *     <li>0, 相手の準備ができる</li>
@@ -129,17 +129,17 @@ public class LocalConnectionTest {
         connection.setListener(listener);
         connection.connect();
 
-        EventBuilder builder = new EventBuilder();
-        assertThat(listener.events, is(contains(
-                builder.create(0, EventType.ConnectSuccess),
-                builder.create(0, EventType.Ready)
+        TestEventBuilder builder = new TestEventBuilder();
+        assertThat(listener.testEvents, is(contains(
+                builder.create(0, TestEventType.ConnectSuccess),
+                builder.create(0, TestEventType.Ready)
         )));
     }
 
     @Test(timeout = 5000)
-    public void ローカルサーバでサーブを行う() throws Exception {
+    public void サーブを行う() throws Exception {
         /*
-         * ローカルサーバに対してサーブを行うと、次のイベントが順に発生する
+         * 接続のイベント後に、次のイベントが順に発生する
          * <ul>
          *     <li>0, サーブ</li>
          *     <li>1, 自陣でのバウンド</li>
@@ -164,15 +164,68 @@ public class LocalConnectionTest {
             Thread.yield();
         }
 
-        List<Event> events = listener.events.subList(2, listener.events.size());
-        EventBuilder builder = new EventBuilder();
-        assertThat(events, is(contains(
-                builder.create(0, EventType.Serve),
-                builder.create(1, EventType.BoundMyArea),
-                builder.create(2, EventType.BoundRivalArea),
-                builder.create(3, EventType.Return),
-                builder.create(5, EventType.BoundMyArea),
-                builder.create(7, EventType.PointRival)
+        List<TestEvent> testEvents = listener.testEvents.subList(2, listener.testEvents.size());
+        TestEventBuilder builder = new TestEventBuilder();
+        assertThat(testEvents, is(contains(
+                builder.create(0, TestEventType.Serve),
+                builder.create(1, TestEventType.BoundMyArea),
+                builder.create(2, TestEventType.BoundRivalArea),
+                builder.create(3, TestEventType.Return),
+                builder.create(5, TestEventType.BoundMyArea),
+                builder.create(7, TestEventType.PointRival)
+        )));
+    }
+
+    @Test(timeout = 5000)
+    public void サーブしてから１回リターンを行う() throws Exception {
+        /*
+         * 相手のリターンが自陣でバウンドした後、次のイベントが順に発生する
+         * <ul>
+         *     <li>6, リターン</li>
+         *     <li>8, 相手陣でのバウンド</li>
+         *     <li>9, 相手のリターン</li>
+         *     <li>11, 自陣でのバウンド</li>
+         *     <li>13, 相手の得点</li>
+         * </ul>
+         */
+        final Connection connection = new LocalConnection(STEP_TIME);
+        TestListener listener = new TestListener() {
+            private int count = 0;
+
+            @Override
+            public void onBoundMyArea(Event event) {
+                if (event.getTurn() != Turn.ME || count != 1) {
+                    return;
+                }
+                try {
+                    Thread.sleep(1 * STEP_TIME);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                connection.swing();
+            }
+
+            @Override
+            public void onPointRival() {
+                super.onPointRival();
+                connection.disconnect();
+            }
+        };
+        connection.setListener(listener);
+        connection.connect();
+        connection.swing();
+        while (connection.isConnected()) {
+            Thread.yield();
+        }
+
+        List<TestEvent> testEvents = listener.testEvents.subList(7, listener.testEvents.size());
+        TestEventBuilder builder = new TestEventBuilder();
+        assertThat(testEvents, is(contains(
+                builder.create(6, TestEventType.Return),
+                builder.create(8, TestEventType.BoundRivalArea),
+                builder.create(9, TestEventType.Return),
+                builder.create(11, TestEventType.BoundMyArea),
+                builder.create(13, TestEventType.PointRival)
         )));
     }
 }

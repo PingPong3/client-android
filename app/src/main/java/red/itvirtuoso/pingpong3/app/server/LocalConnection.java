@@ -32,15 +32,15 @@ public class LocalConnection extends Connection {
 
     private void swingImpl() throws InterruptedException {
         ConnectionListener listener = getListener();
-        listener.onServe();
+        listener.onServe(new Event(Turn.RIVAL));
         sleepStep(1);
-        listener.onBoundMyArea();
+        listener.onBoundMyArea(new Event(Turn.RIVAL));
         sleepStep(1);
-        listener.onBoundRivalArea();
+        listener.onBoundRivalArea(new Event(Turn.RIVAL));
         sleepStep(1);
-        listener.onReturn();
+        listener.onReturn(new Event(Turn.ME));
         sleepStep(2);
-        listener.onBoundMyArea();
+        listener.onBoundMyArea(new Event(Turn.ME));
         sleepStep(2);
         listener.onPointRival();
     }

@@ -18,6 +18,7 @@ import java.util.List;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.server.ConnectionListener;
+import red.itvirtuoso.pingpong3.app.server.Event;
 
 public class RacketFragment extends Fragment implements SensorEventListener, ConnectionListener {
     private OnFragmentInteractionListener mListener;
@@ -143,22 +144,22 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
     }
 
     @Override
-    public void onServe() {
+    public void onServe(Event event) {
         playSound(mRawFoo);
     }
 
     @Override
-    public void onBoundMyArea() {
+    public void onBoundMyArea(Event event) {
         playSound(mRawKo);
     }
 
     @Override
-    public void onBoundRivalArea() {
+    public void onBoundRivalArea(Event event) {
         playSound(mRawKo);
     }
 
     @Override
-    public void onReturn() {
+    public void onReturn(Event event) {
         playSound(mRawKa);
     }
 

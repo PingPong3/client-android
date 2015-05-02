@@ -44,22 +44,22 @@ public class ConnectionTest {
         }
 
         @Override
-        public void onServe() {
+        public void onServe(Event event) {
             /* nop */
         }
 
         @Override
-        public void onBoundMyArea() {
+        public void onBoundMyArea(Event event) {
             /* nop */
         }
 
         @Override
-        public void onBoundRivalArea() {
+        public void onBoundRivalArea(Event event) {
             /* nop */
         }
 
         @Override
-        public void onReturn() {
+        public void onReturn(Event event) {
             /* nop */
         }
 

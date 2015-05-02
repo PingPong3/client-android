@@ -6,9 +6,9 @@ package red.itvirtuoso.pingpong3.app.server;
 public interface ConnectionListener {
     public void onConnectSuccess();
     public void onReady();
-    public void onServe();
-    public void onBoundMyArea();
-    public void onBoundRivalArea();
-    public void onReturn();
+    public void onServe(Event event);
+    public void onBoundMyArea(Event event);
+    public void onBoundRivalArea(Event event);
+    public void onReturn(Event event);
     public void onPointRival();
 }
