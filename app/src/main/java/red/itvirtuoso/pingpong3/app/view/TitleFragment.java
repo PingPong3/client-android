@@ -14,8 +14,6 @@ import red.itvirtuoso.pingpong3.app.server.Connection;
 import red.itvirtuoso.pingpong3.app.server.LocalConnection;
 
 public class TitleFragment extends Fragment {
-    private static final long STEP_TIME = 1000;
-
     private OnFragmentInteractionListener mListener;
     private Button mPlayAsLocalButton;
     private Button mPlayAsInternetButton;
@@ -62,7 +60,7 @@ public class TitleFragment extends Fragment {
     private class PlayAsLocalButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            LocalConnection connection = new LocalConnection(STEP_TIME);
+            LocalConnection connection = new LocalConnection(MainActivity.STEP_TIME);
             mListener.start(connection);
         }
     }

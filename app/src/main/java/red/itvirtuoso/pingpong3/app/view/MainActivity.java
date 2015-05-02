@@ -7,59 +7,15 @@ import android.os.Bundle;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.server.Connection;
-import red.itvirtuoso.pingpong3.app.server.ConnectionListener;
 
 public class MainActivity extends Activity implements
         TitleFragment.OnFragmentInteractionListener,
         RacketFragment.OnFragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getName();
+    static final long STEP_TIME = 750;
 
     private Connection mConnection;
-    private ConnectionListener mListener;
-
-    private class MyConnectionListener implements ConnectionListener {
-        private RacketFragment mFragment;
-
-        public MyConnectionListener(RacketFragment fragment) {
-            mFragment = fragment;
-        }
-
-        @Override
-        public void onConnectSuccess() {
-            /* TODO */
-        }
-
-        @Override
-        public void onReady() {
-            /* TODO */
-        }
-
-        @Override
-        public void onServe() {
-            /* TODO */
-        }
-
-        @Override
-        public void onBoundMyArea() {
-            /* TODO */
-        }
-
-        @Override
-        public void onBoundRivalArea() {
-            /* TODO */
-        }
-
-        @Override
-        public void onReturn() {
-            /* TODO */
-        }
-
-        @Override
-        public void onPointRival() {
-
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +38,13 @@ public class MainActivity extends Activity implements
         transaction.addToBackStack(null);
         transaction.commit();
 
-        mListener = new MyConnectionListener(racketFragment);
-        connection.setListener(mListener);
-        connection.connect();
+        mConnection = connection;
+        mConnection.setListener(racketFragment);
+        mConnection.connect();
     }
 
     @Override
     public void onSwing() {
-        /* TODO */
+        mConnection.swing();
     }
 }
