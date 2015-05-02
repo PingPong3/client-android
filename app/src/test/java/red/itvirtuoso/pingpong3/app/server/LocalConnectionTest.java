@@ -5,14 +5,15 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created by kenji on 15/04/12.
  */
 public class LocalConnectionTest {
+    /* ゲームループの単位時間。テスト用に短くしている */
     private static final long STEP_TIME = 50;
 
     private enum EventType {
@@ -128,10 +129,10 @@ public class LocalConnectionTest {
         connection.connect(listener);
 
         EventBuilder builder = new EventBuilder();
-        assertThat(listener.events, hasItems(
+        assertThat(listener.events, is(contains(
                 builder.create(0, EventType.ConnectSuccess),
                 builder.create(0, EventType.Ready)
-        ));
+        )));
     }
 
     @Test(timeout = 5000)
