@@ -11,7 +11,8 @@ import android.widget.Toast;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Connection;
-import red.itvirtuoso.pingpong3.app.net.LocalConnection;
+import red.itvirtuoso.pingpong3.app.server.LocalServerProxy;
+import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 
 public class TitleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
@@ -60,7 +61,8 @@ public class TitleFragment extends Fragment {
     private class PlayAsLocalButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            LocalConnection connection = new LocalConnection(MainActivity.STEP_TIME);
+            ServerProxy serverProxy = new LocalServerProxy(MainActivity.STEP_TIME);
+            Connection connection = new Connection(serverProxy);
             mListener.start(connection);
         }
     }

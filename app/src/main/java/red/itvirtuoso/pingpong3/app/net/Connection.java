@@ -1,33 +1,40 @@
 package red.itvirtuoso.pingpong3.app.net;
 
+import red.itvirtuoso.pingpong3.app.server.ServerProxy;
+
 /**
  * Created by kenji on 15/04/12.
  */
-public abstract class Connection {
-    private ConnectionListener mListener;
-    private boolean mIsConnected = false;
+public class Connection {
+    private ServerProxy serverProxy;
+    private ConnectionListener listener;
+    private boolean isConnected = false;
 
-    protected abstract boolean onConnect();
+    public Connection(ServerProxy serverProxy) {
+        this.serverProxy = serverProxy;
+    }
 
     public void setListener(ConnectionListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     public final void connect() {
-        mIsConnected = onConnect();
+        isConnected = this.serverProxy.connect();
     }
 
     public final void disconnect() {
-        mIsConnected = false;
+        isConnected = false;
     }
 
     public final boolean isConnected() {
-        return mIsConnected;
+        return isConnected;
     }
 
     protected final ConnectionListener getListener() {
-        return mListener;
+        return listener;
     }
 
-    public abstract void swing();
+    public void swing() {
+        /* TODO */
+    }
 }

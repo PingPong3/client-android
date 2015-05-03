@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by kenji on 15/05/03.
  */
-public class LocalServerProxy implements Runnable {
+public class LocalServerProxy implements ServerProxy, Runnable {
     private long stepTime;
     private Mode mode;
     private ArrayList<Action> actions;
@@ -81,6 +81,12 @@ public class LocalServerProxy implements Runnable {
         }
     }
 
+    @Override
+    public boolean connect() {
+        return true;
+    }
+
+    @Override
     public void send(Packet packet) {
         switch (packet.getType()) {
             case SWING:
@@ -102,6 +108,7 @@ public class LocalServerProxy implements Runnable {
                 addPacketAction(currentTime, 5, PacketType.BOUND_MY_AREA);
                 addModeAction(currentTime, 5, Mode.WAIT);
                 addPacketAction(currentTime, 7, PacketType.POINT_RIVAL);
+                addModeAction(currentTime, 7, Mode.READY);
                 break;
 
             case WAIT:
@@ -113,6 +120,7 @@ public class LocalServerProxy implements Runnable {
                 addPacketAction(currentTime, 5, PacketType.BOUND_MY_AREA);
                 addModeAction(currentTime, 5, Mode.WAIT);
                 addPacketAction(currentTime, 7, PacketType.POINT_RIVAL);
+                addModeAction(currentTime, 7, Mode.READY);
                 break;
 
             default:
@@ -120,6 +128,7 @@ public class LocalServerProxy implements Runnable {
         }
     }
 
+    @Override
     public Packet receive() {
         synchronized (this.packets) {
             if (this.packets.size() == 0) {

@@ -76,6 +76,13 @@ public class LocalServerProxyTest {
         }
     }
 
+    @Test
+    public void 接続が成功する() {
+        LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
+        boolean result = serverProxy.connect();
+        assertThat(result, is(true));
+    }
+
     @Test(timeout = 1000)
     public void サーブをする() throws Exception {
         /*
@@ -89,13 +96,13 @@ public class LocalServerProxyTest {
          *     <li>7, 相手の得点</li>
          * </ul>
          */
-        LocalServerProxy server = new LocalServerProxy(STEP_TIME);
+        LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
         _LogBuilder builder = new _LogBuilder(STEP_TIME);
         List<_Log> logs = new ArrayList<>();
-        server.send(new Packet(PacketType.SWING));
+        serverProxy.send(new Packet(PacketType.SWING));
         while (logs.size() < 6) {
             Thread.yield();
-            Packet packet = server.receive();
+            Packet packet = serverProxy.receive();
             if (packet == null) {
                 continue;
             }
@@ -124,13 +131,13 @@ public class LocalServerProxyTest {
          *     <li>13, 相手の得点</li>
          * </ul>
          */
-        LocalServerProxy server = new LocalServerProxy(STEP_TIME);
+        LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
         _LogBuilder builder = new _LogBuilder(STEP_TIME);
         List<_Log> tempLogs = new ArrayList<>();
-        server.send(new Packet(PacketType.SWING));
+        serverProxy.send(new Packet(PacketType.SWING));
         while (tempLogs.size() < 5) {
             Thread.yield();
-            Packet packet = server.receive();
+            Packet packet = serverProxy.receive();
             if (packet == null) {
                 continue;
             }
@@ -138,10 +145,10 @@ public class LocalServerProxyTest {
         }
         List<_Log> logs = new ArrayList<>();
         Thread.sleep(1 * STEP_TIME);
-        server.send(new Packet(PacketType.SWING));
+        serverProxy.send(new Packet(PacketType.SWING));
         while (logs.size() < 5) {
             Thread.yield();
-            Packet packet = server.receive();
+            Packet packet = serverProxy.receive();
             if (packet == null) {
                 continue;
             }
