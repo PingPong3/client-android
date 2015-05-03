@@ -8,6 +8,7 @@ import java.util.List;
 import red.itvirtuoso.pingpong3.app.server.LocalServerProxy;
 import red.itvirtuoso.pingpong3.app.server.Packet;
 import red.itvirtuoso.pingpong3.app.server.PacketType;
+import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -38,6 +39,7 @@ public class LocalServerProxyTest {
         }
     }
 
+    /* サーバからのパケット送信を記録するテスト用のクラス */
     private class _Log {
         private long step;
         private PacketType type;
@@ -76,11 +78,33 @@ public class LocalServerProxyTest {
         }
     }
 
-    @Test
+    private List<_Log> receivePackets(ServerProxy serverProxy, _LogBuilder builder, int count) {
+
+        List<_Log> logs = new ArrayList<>();
+        while (logs.size() < count) {
+            Thread.yield();
+            Packet packet = serverProxy.receive();
+            if (packet == null) {
+                continue;
+            }
+            logs.add(builder.create(packet.getType()));
+        }
+        return logs;
+    }
+
+    @Test(timeout = 1000)
     public void 接続が成功する() {
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
         boolean result = serverProxy.connect();
+        _LogBuilder builder = new _LogBuilder(STEP_TIME);
+        List<_Log> logs = receivePackets(serverProxy, builder, 2);
+
+        /* 結果確認 */
         assertThat(result, is(true));
+        assertThat(logs, is(contains(
+                builder.create(0, PacketType.CONNECT_SUCCESS),
+                builder.create(0, PacketType.READY)
+        )));
     }
 
     @Test(timeout = 1000)
@@ -96,19 +120,16 @@ public class LocalServerProxyTest {
          *     <li>7, 相手の得点</li>
          * </ul>
          */
+
+        /* サーバの準備 */
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
         _LogBuilder builder = new _LogBuilder(STEP_TIME);
-        List<_Log> logs = new ArrayList<>();
+        /* SWINGパケットの送信 */
         serverProxy.send(new Packet(PacketType.SWING));
-        while (logs.size() < 6) {
-            Thread.yield();
-            Packet packet = serverProxy.receive();
-            if (packet == null) {
-                continue;
-            }
-            logs.add(builder.create(packet.getType()));
-        }
+        /* パケットの受信 */
+        List<_Log> logs = receivePackets(serverProxy, builder, 6);
 
+        /* 結果の確認 */
         assertThat(logs, is(contains(
                 builder.create(0, PacketType.SERVE),
                 builder.create(1, PacketType.BOUND_MY_AREA),
@@ -131,30 +152,21 @@ public class LocalServerProxyTest {
          *     <li>13, 相手の得点</li>
          * </ul>
          */
+
+        /* サーバの準備 */
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
         _LogBuilder builder = new _LogBuilder(STEP_TIME);
         List<_Log> tempLogs = new ArrayList<>();
+        /* SWINGパケットの送信と自身がリターン可能になるまでパケットの受信 */
         serverProxy.send(new Packet(PacketType.SWING));
-        while (tempLogs.size() < 5) {
-            Thread.yield();
-            Packet packet = serverProxy.receive();
-            if (packet == null) {
-                continue;
-            }
-            tempLogs.add(builder.create(packet.getType()));
-        }
-        List<_Log> logs = new ArrayList<>();
+        receivePackets(serverProxy, builder, 5);
+        /* SWINGパケットの送信（リターン） */
         Thread.sleep(1 * STEP_TIME);
         serverProxy.send(new Packet(PacketType.SWING));
-        while (logs.size() < 5) {
-            Thread.yield();
-            Packet packet = serverProxy.receive();
-            if (packet == null) {
-                continue;
-            }
-            logs.add(builder.create(packet.getType()));
-        }
+        /* パケットの受信 */
+        List<_Log> logs = receivePackets(serverProxy, builder, 5);
 
+        /* 結果の確認 */
         assertThat(logs, is(contains(
                 builder.create(6, PacketType.RETURN),
                 builder.create(8, PacketType.BOUND_RIVAL_AREA),

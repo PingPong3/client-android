@@ -83,6 +83,10 @@ public class LocalServerProxy implements ServerProxy, Runnable {
 
     @Override
     public boolean connect() {
+        long currentTime = System.currentTimeMillis();
+        addPacketAction(currentTime, 0, PacketType.CONNECT_SUCCESS);
+        addPacketAction(currentTime, 0, PacketType.READY);
+        addModeAction(currentTime, 0, Mode.READY);
         return true;
     }
 

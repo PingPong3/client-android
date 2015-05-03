@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -135,12 +136,12 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
 
     @Override
     public void onConnectSuccess() {
-        /* TODO */
+        Toast.makeText(getActivity(), "対戦相手を待っています", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onReady() {
-        /* TODO */
+        Toast.makeText(getActivity(), "試合開始", Toast.LENGTH_SHORT).show();
     }
 
     @Override
