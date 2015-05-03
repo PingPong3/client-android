@@ -82,18 +82,18 @@ public class ConnectionTest {
             new Packet(PacketType.SWING)
         )));
     }
-//
-//    @Test(timeout = 1000)
-//    public void サーバのパケットがリスナーに伝えらえる() throws Exception {
-//        TestServerProxy serverProxy = new TestServerProxy();
-//        Connection connection = new Connection(serverProxy);
-//        TestConnectionListener listener = new TestConnectionListener();
-//        connection.setListener(listener);
-//        connection.connect();
-//
-//        /* 結果確認 */
-//        assertThat(listener.events, is(contains(
-//                new Event(EventType.ME_READY, new EventArgs(Turn.ME))
-//        )));
-//    }
+
+    @Test(timeout = 1000)
+    public void サーバのパケットがリスナーに伝えらえる() throws Exception {
+        TestServerProxy serverProxy = new TestServerProxy();
+        Connection connection = new Connection(serverProxy);
+        TestConnectionListener listener = new TestConnectionListener();
+        connection.setListener(listener);
+        connection.connect();
+
+        /* 結果確認 */
+        assertThat(listener.events, is(contains(
+                new Event(EventType.ME_READY)
+        )));
+    }
 }
