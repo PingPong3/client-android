@@ -142,22 +142,26 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
     @Override
     public void onEvent(Event event) {
         switch (event.getType()) {
-            case READY:
+            case ME_READY:
+            case RIVAL_READY:
                 Toast.makeText(getActivity(), "試合開始", Toast.LENGTH_SHORT).show();
                 break;
-            case SERVE:
+            case ME_SERVE:
+            case RIVAL_SERVE:
                 playSound(mRawFoo);
                 break;
-            case BOUND_MY_AREA:
+            case ME_BOUND_MY_AREA:
+            case ME_BOUND_RIVAL_AREA:
+            case RIVAL_BOUND_MY_AREA:
+            case RIVAL_BOUND_RIVAL_AREA:
                 playSound(mRawKo);
                 break;
-            case BOUND_RIVAL_AREA:
-                playSound(mRawKo);
-                break;
-            case RETURN:
+            case ME_RETURN:
+            case RIVAL_RETURN:
                 playSound(mRawKa);
                 break;
-            case POINT_RIVAL:
+            case ME_POINT:
+            case RIVAL_POINT:
                 playSound(mRawWhistle);
                 break;
             default:

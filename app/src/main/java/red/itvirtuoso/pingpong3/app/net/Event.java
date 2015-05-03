@@ -5,18 +5,12 @@ package red.itvirtuoso.pingpong3.app.net;
  */
 public class Event {
     private EventType type;
-    private EventArgs args;
 
-    public Event(EventType type, EventArgs args) {
+    public Event(EventType type) {
         this.type = type;
-        this.args = args;
     }
 
     public EventType getType() {
         return type;
-    }
-
-    public EventArgs getArgs() {
-        return args;
     }
 }

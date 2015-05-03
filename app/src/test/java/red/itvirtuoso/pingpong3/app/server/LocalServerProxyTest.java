@@ -1,4 +1,4 @@
-package red.irvirtuoso.pingpong3.app.server;
+package red.itvirtuoso.pingpong3.app.server;
 
 import org.junit.Test;
 
