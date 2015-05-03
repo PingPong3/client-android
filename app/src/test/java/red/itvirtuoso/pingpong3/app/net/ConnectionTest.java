@@ -26,6 +26,11 @@ public class ConnectionTest {
         }
 
         @Override
+        public void disconnect() {
+            /* nop */
+        }
+
+        @Override
         public void send(Packet packet) {
             this.sendPackets.add(packet);
         }

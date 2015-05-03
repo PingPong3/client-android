@@ -17,7 +17,7 @@ public class LocalServerProxy implements ServerProxy, Runnable {
 
     public LocalServerProxy(long stepTime) {
         this.stepTime = stepTime;
-        this.mode = Mode.READY;
+        this.mode = Mode.UNREADY;
         this.actions = new ArrayList<>();
         this.packets = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class LocalServerProxy implements ServerProxy, Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (this.mode != Mode.STOP) {
             Thread.yield();
             synchronized (this.actions) {
                 if (this.actions.size() == 0) {
@@ -85,9 +85,15 @@ public class LocalServerProxy implements ServerProxy, Runnable {
     public boolean connect() {
         long currentTime = System.currentTimeMillis();
         addPacketAction(currentTime, 0, PacketType.CONNECT_SUCCESS);
-        addPacketAction(currentTime, 0, PacketType.READY);
         addModeAction(currentTime, 0, Mode.READY);
+        addPacketAction(currentTime, 0, PacketType.READY);
         return true;
+    }
+
+    @Override
+    public void disconnect() {
+        long currentTime = System.currentTimeMillis();
+        addModeAction(currentTime, 0, Mode.STOP);
     }
 
     @Override
@@ -109,8 +115,8 @@ public class LocalServerProxy implements ServerProxy, Runnable {
                 addPacketAction(currentTime, 1, PacketType.BOUND_MY_AREA);
                 addPacketAction(currentTime, 2, PacketType.BOUND_RIVAL_AREA);
                 addPacketAction(currentTime, 3, PacketType.RETURN);
-                addPacketAction(currentTime, 5, PacketType.BOUND_MY_AREA);
                 addModeAction(currentTime, 5, Mode.WAIT);
+                addPacketAction(currentTime, 5, PacketType.BOUND_MY_AREA);
                 addPacketAction(currentTime, 7, PacketType.POINT_RIVAL);
                 addModeAction(currentTime, 7, Mode.READY);
                 break;
@@ -121,8 +127,8 @@ public class LocalServerProxy implements ServerProxy, Runnable {
                 addPacketAction(currentTime, 0, PacketType.RETURN);
                 addPacketAction(currentTime, 2, PacketType.BOUND_RIVAL_AREA);
                 addPacketAction(currentTime, 3, PacketType.RETURN);
-                addPacketAction(currentTime, 5, PacketType.BOUND_MY_AREA);
                 addModeAction(currentTime, 5, Mode.WAIT);
+                addPacketAction(currentTime, 5, PacketType.BOUND_MY_AREA);
                 addPacketAction(currentTime, 7, PacketType.POINT_RIVAL);
                 addModeAction(currentTime, 7, Mode.READY);
                 break;

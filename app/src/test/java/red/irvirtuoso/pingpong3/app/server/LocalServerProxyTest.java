@@ -96,15 +96,9 @@ public class LocalServerProxyTest {
     public void 接続が成功する() {
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
         boolean result = serverProxy.connect();
-        _LogBuilder builder = new _LogBuilder(STEP_TIME);
-        List<_Log> logs = receivePackets(serverProxy, builder, 2);
 
         /* 結果確認 */
         assertThat(result, is(true));
-        assertThat(logs, is(contains(
-                builder.create(0, PacketType.CONNECT_SUCCESS),
-                builder.create(0, PacketType.READY)
-        )));
     }
 
     @Test(timeout = 1000)
@@ -121,13 +115,17 @@ public class LocalServerProxyTest {
          * </ul>
          */
 
+        _LogBuilder builder = new _LogBuilder(STEP_TIME);
         /* サーバの準備 */
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
-        _LogBuilder builder = new _LogBuilder(STEP_TIME);
+        serverProxy.connect();
+        receivePackets(serverProxy, builder, 2);
         /* SWINGパケットの送信 */
         serverProxy.send(new Packet(PacketType.SWING));
         /* パケットの受信 */
         List<_Log> logs = receivePackets(serverProxy, builder, 6);
+        /* サーバの終了 */
+        serverProxy.disconnect();
 
         /* 結果の確認 */
         assertThat(logs, is(contains(
@@ -153,10 +151,11 @@ public class LocalServerProxyTest {
          * </ul>
          */
 
+        _LogBuilder builder = new _LogBuilder(STEP_TIME);
         /* サーバの準備 */
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
-        _LogBuilder builder = new _LogBuilder(STEP_TIME);
-        List<_Log> tempLogs = new ArrayList<>();
+        serverProxy.connect();
+        receivePackets(serverProxy, builder, 2);
         /* SWINGパケットの送信と自身がリターン可能になるまでパケットの受信 */
         serverProxy.send(new Packet(PacketType.SWING));
         receivePackets(serverProxy, builder, 5);
@@ -165,6 +164,8 @@ public class LocalServerProxyTest {
         serverProxy.send(new Packet(PacketType.SWING));
         /* パケットの受信 */
         List<_Log> logs = receivePackets(serverProxy, builder, 5);
+        /* サーバの終了 */
+        serverProxy.disconnect();
 
         /* 結果の確認 */
         assertThat(logs, is(contains(

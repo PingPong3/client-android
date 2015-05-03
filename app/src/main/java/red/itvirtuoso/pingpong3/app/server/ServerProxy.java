@@ -6,6 +6,8 @@ package red.itvirtuoso.pingpong3.app.server;
 public interface ServerProxy {
     boolean connect();
 
+    void disconnect();
+
     void send(Packet packet);
     Packet receive();
 }
