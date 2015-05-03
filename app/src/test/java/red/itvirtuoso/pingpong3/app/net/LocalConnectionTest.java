@@ -5,12 +5,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import red.itvirtuoso.pingpong3.app.net.Connection;
-import red.itvirtuoso.pingpong3.app.net.ConnectionListener;
-import red.itvirtuoso.pingpong3.app.net.LocalConnection;
-import red.itvirtuoso.pingpong3.app.server.Event;
-import red.itvirtuoso.pingpong3.app.server.Turn;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
@@ -179,59 +173,6 @@ public class LocalConnectionTest {
                 builder.create(3, TestEventType.Return),
                 builder.create(5, TestEventType.BoundMyArea),
                 builder.create(7, TestEventType.PointRival)
-        )));
-    }
-
-    @Test(timeout = 5000)
-    public void サーブしてから１回リターンを行う() throws Exception {
-        /*
-         * 相手のリターンが自陣でバウンドした後、次のイベントが順に発生する
-         * <ul>
-         *     <li>6, リターン</li>
-         *     <li>8, 相手陣でのバウンド</li>
-         *     <li>9, 相手のリターン</li>
-         *     <li>11, 自陣でのバウンド</li>
-         *     <li>13, 相手の得点</li>
-         * </ul>
-         */
-        final Connection connection = new LocalConnection(STEP_TIME);
-        TestListener listener = new TestListener() {
-            private int count = 0;
-
-            @Override
-            public void onBoundMyArea(Event event) {
-                if (event.getTurn() != Turn.ME || count != 1) {
-                    return;
-                }
-                try {
-                    Thread.sleep(1 * STEP_TIME);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                connection.swing();
-            }
-
-            @Override
-            public void onPointRival() {
-                super.onPointRival();
-                connection.disconnect();
-            }
-        };
-        connection.setListener(listener);
-        connection.connect();
-        connection.swing();
-        while (connection.isConnected()) {
-            Thread.yield();
-        }
-
-        List<TestEvent> testEvents = listener.testEvents.subList(7, listener.testEvents.size());
-        TestEventBuilder builder = new TestEventBuilder();
-        assertThat(testEvents, is(contains(
-                builder.create(6, TestEventType.Return),
-                builder.create(8, TestEventType.BoundRivalArea),
-                builder.create(9, TestEventType.Return),
-                builder.create(11, TestEventType.BoundMyArea),
-                builder.create(13, TestEventType.PointRival)
         )));
     }
 }

@@ -2,12 +2,8 @@ package red.itvirtuoso.pingpong3.app.net;
 
 import org.junit.Test;
 
-import red.itvirtuoso.pingpong3.app.net.Connection;
-import red.itvirtuoso.pingpong3.app.net.ConnectionListener;
-import red.itvirtuoso.pingpong3.app.server.Event;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created by kenji on 15/04/21.
@@ -76,11 +72,11 @@ public class ConnectionTest {
     @Test(timeout = 5000)
     public void 接続するとisConnectedプロパティがtrueになる() throws Exception {
         Connection connection = new TestConnection();
-        assertFalse("接続していないのにステータスがconnectedになっている", connection.isConnected());
+        assertThat("接続していないのにステータスがconnectedになっている", connection.isConnected(), is(false));
         TestListener listener = new TestListener();
         connection.setListener(listener);
         connection.connect();
-        assertTrue("接続しているのにステータスがconnectedになっていない", connection.isConnected());
+        assertThat("接続しているのにステータスがconnectedになっていない", connection.isConnected(), is(true));
     }
 
     @Test(timeout = 5000)
@@ -90,6 +86,6 @@ public class ConnectionTest {
         connection.setListener(listener);
         connection.connect();
         connection.disconnect();
-        assertFalse("切断したのにステータスがconnectedになっている", connection.isConnected());
+        assertThat("切断したのにステータスがconnectedになっている", connection.isConnected(), is(false));
     }
 }
