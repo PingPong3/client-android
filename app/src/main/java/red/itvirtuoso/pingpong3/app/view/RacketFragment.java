@@ -140,33 +140,29 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
     }
 
     @Override
-    public void onReady() {
-        Toast.makeText(getActivity(), "試合開始", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onServe(Event event) {
-        playSound(mRawFoo);
-    }
-
-    @Override
-    public void onBoundMyArea(Event event) {
-        playSound(mRawKo);
-    }
-
-    @Override
-    public void onBoundRivalArea(Event event) {
-        playSound(mRawKo);
-    }
-
-    @Override
-    public void onReturn(Event event) {
-        playSound(mRawKa);
-    }
-
-    @Override
-    public void onPointRival() {
-        playSound(mRawWhistle);
+    public void onEvent(Event event) {
+        switch (event.getType()) {
+            case READY:
+                Toast.makeText(getActivity(), "試合開始", Toast.LENGTH_SHORT).show();
+                break;
+            case SERVE:
+                playSound(mRawFoo);
+                break;
+            case BOUND_MY_AREA:
+                playSound(mRawKo);
+                break;
+            case BOUND_RIVAL_AREA:
+                playSound(mRawKo);
+                break;
+            case RETURN:
+                playSound(mRawKa);
+                break;
+            case POINT_RIVAL:
+                playSound(mRawWhistle);
+                break;
+            default:
+                /* nop */
+        }
     }
 
     public interface OnFragmentInteractionListener {

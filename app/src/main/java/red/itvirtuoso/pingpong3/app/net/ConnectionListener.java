@@ -5,10 +5,5 @@ package red.itvirtuoso.pingpong3.app.net;
  */
 public interface ConnectionListener {
     public void onConnectSuccess();
-    public void onReady();
-    public void onServe(Event event);
-    public void onBoundMyArea(Event event);
-    public void onBoundRivalArea(Event event);
-    public void onReturn(Event event);
-    public void onPointRival();
+    public void onEvent(Event event);
 }

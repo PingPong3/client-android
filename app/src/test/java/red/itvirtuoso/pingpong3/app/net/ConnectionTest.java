@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.is;
 public class ConnectionTest {
     private class TestServerProxy implements ServerProxy {
         private List<Packet> sendPackets = new ArrayList<>();
+        private List<Packet> receivePackets = new ArrayList<>();
 
         @Override
         public boolean connect() {
@@ -37,44 +38,23 @@ public class ConnectionTest {
 
         @Override
         public Packet receive() {
-            return null;
+            return this.receivePackets.size() == 0
+                    ? null
+                    : this.receivePackets.remove(0);
         }
     }
 
-    private class TestListener implements ConnectionListener {
+    private class TestConnectionListener implements ConnectionListener {
+        private List<Event> events = new ArrayList<>();
+
         @Override
         public void onConnectSuccess() {
             /* nop */
         }
 
         @Override
-        public void onReady() {
-            /* nop */
-        }
-
-        @Override
-        public void onServe(Event event) {
-            /* nop */
-        }
-
-        @Override
-        public void onBoundMyArea(Event event) {
-            /* nop */
-        }
-
-        @Override
-        public void onBoundRivalArea(Event event) {
-            /* nop */
-        }
-
-        @Override
-        public void onReturn(Event event) {
-            /* nop */
-        }
-
-        @Override
-        public void onPointRival() {
-            /* nop */
+        public void onEvent(Event event) {
+            this.events.add(event);
         }
     }
 
@@ -89,15 +69,31 @@ public class ConnectionTest {
         assertThat(connection.isConnected(), is(false));
     }
 
-    @Test
+    @Test(timeout = 1000)
     public void ラケットを振る() throws Exception {
         TestServerProxy serverProxy = new TestServerProxy();
         Connection connection = new Connection(serverProxy);
         connection.connect();
         connection.swing();
+        connection.disconnect();
 
+        /* 結果確認 */
         assertThat(serverProxy.sendPackets, is(contains(
             new Packet(PacketType.SWING)
         )));
     }
+//
+//    @Test(timeout = 1000)
+//    public void サーバのパケットがリスナーに伝えらえる() throws Exception {
+//        TestServerProxy serverProxy = new TestServerProxy();
+//        Connection connection = new Connection(serverProxy);
+//        TestConnectionListener listener = new TestConnectionListener();
+//        connection.setListener(listener);
+//        connection.connect();
+//
+//        /* 結果確認 */
+//        assertThat(listener.events, is(contains(
+//                new Event(EventType.ME_READY, new EventArgs(Turn.ME))
+//        )));
+//    }
 }

@@ -96,6 +96,7 @@ public class LocalServerProxyTest {
     public void 接続が成功する() {
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
         boolean result = serverProxy.connect();
+        serverProxy.disconnect();
 
         /* 結果確認 */
         assertThat(result, is(true));
@@ -129,12 +130,12 @@ public class LocalServerProxyTest {
 
         /* 結果の確認 */
         assertThat(logs, is(contains(
-                builder.create(0, PacketType.SERVE),
-                builder.create(1, PacketType.BOUND_MY_AREA),
-                builder.create(2, PacketType.BOUND_RIVAL_AREA),
-                builder.create(3, PacketType.RETURN),
-                builder.create(5, PacketType.BOUND_MY_AREA),
-                builder.create(7, PacketType.POINT_RIVAL)
+                builder.create(0, PacketType.ME_SERVE),
+                builder.create(1, PacketType.RIVAL_BOUND_MY_AREA),
+                builder.create(2, PacketType.RIVAL_BOUND_RIVAL_AREA),
+                builder.create(3, PacketType.RIVAL_RETURN),
+                builder.create(5, PacketType.ME_BOUND_MY_AREA),
+                builder.create(7, PacketType.RIVAL_POINT)
         )));
     }
 
@@ -169,11 +170,11 @@ public class LocalServerProxyTest {
 
         /* 結果の確認 */
         assertThat(logs, is(contains(
-                builder.create(6, PacketType.RETURN),
-                builder.create(8, PacketType.BOUND_RIVAL_AREA),
-                builder.create(9, PacketType.RETURN),
-                builder.create(11, PacketType.BOUND_MY_AREA),
-                builder.create(13, PacketType.POINT_RIVAL)
+                builder.create(6, PacketType.ME_RETURN),
+                builder.create(8, PacketType.RIVAL_BOUND_RIVAL_AREA),
+                builder.create(9, PacketType.RIVAL_RETURN),
+                builder.create(11, PacketType.ME_BOUND_MY_AREA),
+                builder.create(13, PacketType.RIVAL_POINT)
         )));
     }
 }
