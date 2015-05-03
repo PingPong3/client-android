@@ -13,4 +13,28 @@ public class Packet {
     public PacketType getType() {
         return type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Packet packet = (Packet) o;
+
+        if (type != packet.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return type.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "type=" + type +
+                '}';
+    }
 }

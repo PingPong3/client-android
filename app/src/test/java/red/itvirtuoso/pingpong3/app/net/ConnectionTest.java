@@ -2,10 +2,15 @@ package red.itvirtuoso.pingpong3.app.net;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import red.itvirtuoso.pingpong3.app.server.Packet;
+import red.itvirtuoso.pingpong3.app.server.PacketType;
 import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -13,6 +18,8 @@ import static org.hamcrest.Matchers.is;
  */
 public class ConnectionTest {
     private class TestServerProxy implements ServerProxy {
+        private List<Packet> sendPackets = new ArrayList<>();
+
         @Override
         public boolean connect() {
             return true;
@@ -20,7 +27,7 @@ public class ConnectionTest {
 
         @Override
         public void send(Packet packet) {
-            /* nop */
+            this.sendPackets.add(packet);
         }
 
         @Override
@@ -66,14 +73,26 @@ public class ConnectionTest {
         }
     }
 
-    @Test(timeout = 5000)
+    @Test(timeout = 1000)
     public void 接続と切断を行う() throws Exception {
-        TestServerProxy server = new TestServerProxy();
-        Connection connection = new Connection(server);
+        TestServerProxy serverProxy = new TestServerProxy();
+        Connection connection = new Connection(serverProxy);
         assertThat(connection.isConnected(), is(false));
         connection.connect();
         assertThat(connection.isConnected(), is(true));
         connection.disconnect();
         assertThat(connection.isConnected(), is(false));
+    }
+
+    @Test
+    public void ラケットを振る() throws Exception {
+        TestServerProxy serverProxy = new TestServerProxy();
+        Connection connection = new Connection(serverProxy);
+        connection.connect();
+        connection.swing();
+
+        assertThat(serverProxy.sendPackets, is(contains(
+            new Packet(PacketType.SWING)
+        )));
     }
 }

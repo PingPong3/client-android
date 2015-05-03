@@ -1,5 +1,7 @@
 package red.itvirtuoso.pingpong3.app.net;
 
+import red.itvirtuoso.pingpong3.app.server.Packet;
+import red.itvirtuoso.pingpong3.app.server.PacketType;
 import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 
 /**
@@ -35,6 +37,7 @@ public class Connection {
     }
 
     public void swing() {
-        /* TODO */
+        Packet packet = new Packet(PacketType.SWING);
+        serverProxy.send(packet);
     }
 }
