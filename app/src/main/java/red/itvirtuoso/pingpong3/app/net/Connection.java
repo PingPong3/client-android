@@ -50,6 +50,7 @@ public class Connection implements Runnable {
 
     public final void disconnect() {
         isConnected = false;
+        serverProxy.disconnect();
     }
 
     public final boolean isConnected() {
