@@ -30,7 +30,7 @@ public class Connection implements Runnable {
                 continue;
             }
             EventType eventType = EventType.create(packet.getType());
-            if (listener != null) {
+            if (eventType != null && listener != null) {
                 listener.onEvent(new Event(eventType));
             }
         }

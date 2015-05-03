@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
     private int mRawKa;
     private int mRawKo;
     private int mRawWhistle;
+
+    private Handler mHandler = new Handler();
 
     public static RacketFragment newInstance() {
         RacketFragment fragment = new RacketFragment();
@@ -140,37 +143,42 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
     }
 
     @Override
-    public void onEvent(Event event) {
-        switch (event.getType()) {
-            case ME_READY:
-            case RIVAL_READY:
-                Toast.makeText(getActivity(), "試合開始", Toast.LENGTH_SHORT).show();
-                break;
-            case ME_SERVE:
-            case RIVAL_SERVE:
-                playSound(mRawFoo);
-                break;
-            case ME_BOUND_MY_AREA:
-            case ME_BOUND_RIVAL_AREA:
-            case RIVAL_BOUND_MY_AREA:
-            case RIVAL_BOUND_RIVAL_AREA:
-                playSound(mRawKo);
-                break;
-            case ME_RETURN:
-            case RIVAL_RETURN:
-                playSound(mRawKa);
-                break;
-            case ME_POINT:
-            case RIVAL_POINT:
-                playSound(mRawWhistle);
-                break;
-            default:
+    public void onEvent(final Event event) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                switch (event.getType()) {
+                    case ME_READY:
+                    case RIVAL_READY:
+                        Toast.makeText(getActivity(), "試合開始", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ME_SERVE:
+                    case RIVAL_SERVE:
+                        playSound(mRawFoo);
+                        break;
+                    case ME_BOUND_MY_AREA:
+                    case ME_BOUND_RIVAL_AREA:
+                    case RIVAL_BOUND_MY_AREA:
+                    case RIVAL_BOUND_RIVAL_AREA:
+                        playSound(mRawKo);
+                        break;
+                    case ME_RETURN:
+                    case RIVAL_RETURN:
+                        playSound(mRawKa);
+                        break;
+                    case ME_POINT:
+                    case RIVAL_POINT:
+                        playSound(mRawWhistle);
+                        break;
+                    default:
                 /* nop */
-        }
+                }
+            }
+        };
+        mHandler.post(runnable);
     }
 
     public interface OnFragmentInteractionListener {
         public void onSwing();
     }
-
 }
