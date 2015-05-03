@@ -115,7 +115,7 @@ public class LocalServerProxyTest {
     @Test(timeout = 1000)
     public void リターンをする() throws Exception {
         /*
-         * ボールが返ってきたときにSWINGパケットを送信すると、次のパケットを順に受信する
+         * ボールが返ってきたときに1秒待ってからSWINGパケットを送信すると、次のパケットを順に受信する
          * <ul>
          *     <li>6, リターン</li>
          *     <li>8, 相手陣でのバウンド</li>
@@ -137,6 +137,7 @@ public class LocalServerProxyTest {
             tempLogs.add(builder.create(packet.getType()));
         }
         List<_Log> logs = new ArrayList<>();
+        Thread.sleep(1 * STEP_TIME);
         server.send(new Packet(PacketType.SWING));
         while (logs.size() < 5) {
             Thread.yield();
