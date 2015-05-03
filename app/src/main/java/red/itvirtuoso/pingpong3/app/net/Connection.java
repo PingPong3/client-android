@@ -10,7 +10,7 @@ import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 /**
  * Created by kenji on 15/04/12.
  */
-public class Connection {
+public class Connection implements Runnable {
     private ServerProxy serverProxy;
     private ConnectionListener listener;
     private boolean isConnected = false;
@@ -21,12 +21,31 @@ public class Connection {
         this.service = Executors.newSingleThreadExecutor();
     }
 
+    @Override
+    public void run() {
+        while (isConnected) {
+            Thread.yield();
+            Packet packet = serverProxy.receive();
+            if (packet == null) {
+                continue;
+            }
+            EventType eventType = EventType.create(packet.getType());
+            if (listener != null) {
+                listener.onEvent(new Event(eventType));
+            }
+        }
+    }
+
     public void setListener(ConnectionListener listener) {
         this.listener = listener;
     }
 
     public final void connect() {
-        this.isConnected = this.serverProxy.connect();
+        isConnected = serverProxy.connect();
+        if (isConnected) {
+            service.execute(this);
+            service.shutdown();
+        }
     }
 
     public final void disconnect() {
@@ -35,10 +54,6 @@ public class Connection {
 
     public final boolean isConnected() {
         return isConnected;
-    }
-
-    protected final ConnectionListener getListener() {
-        return listener;
     }
 
     public void swing() {

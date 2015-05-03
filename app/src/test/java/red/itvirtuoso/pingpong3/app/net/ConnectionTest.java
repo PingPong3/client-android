@@ -79,7 +79,7 @@ public class ConnectionTest {
 
         /* 結果確認 */
         assertThat(serverProxy.sendPackets, is(contains(
-            new Packet(PacketType.SWING)
+                new Packet(PacketType.SWING)
         )));
     }
 
@@ -90,6 +90,11 @@ public class ConnectionTest {
         TestConnectionListener listener = new TestConnectionListener();
         connection.setListener(listener);
         connection.connect();
+        serverProxy.receivePackets.add(new Packet(PacketType.ME_READY));
+        while (serverProxy.receivePackets.size() > 0) {
+            Thread.yield();
+        }
+        connection.disconnect();
 
         /* 結果確認 */
         assertThat(listener.events, is(contains(
