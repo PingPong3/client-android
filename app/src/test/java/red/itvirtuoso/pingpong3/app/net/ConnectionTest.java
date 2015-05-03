@@ -100,6 +100,5 @@ public class ConnectionTest {
         assertThat(listener.events, is(contains(
                 new Event(EventType.ME_READY)
         )));
-        assertThat(true, is(false));
     }
 }
