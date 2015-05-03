@@ -66,6 +66,14 @@ public class LocalServerProxyTest {
             result = 31 * result + type.hashCode();
             return result;
         }
+
+        @Override
+        public String toString() {
+            return getClass().getSimpleName() + "{" +
+                    "step=" + step +
+                    ", type=" + type +
+                    '}';
+        }
     }
 
     @Test(timeout = 1000)
@@ -85,8 +93,12 @@ public class LocalServerProxyTest {
         _LogBuilder builder = new _LogBuilder(STEP_TIME);
         List<_Log> logs = new ArrayList<>();
         server.send(new Packet(PacketType.SWING));
-        for (int i = 0; i < 6; i++) {
-            logs.add(builder.create(server.receive().getType()));
+        while (logs.size() < 6) {
+            Packet packet = server.receive();
+            if (packet == null) {
+                continue;
+            }
+            logs.add(builder.create(packet.getType()));
         }
 
         assertThat(logs, is(contains(
