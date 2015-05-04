@@ -154,7 +154,7 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
                         break;
                     case ME_SERVE:
                     case RIVAL_SERVE:
-                        playSound(mRawFoo);
+                        playSound(mRawKa);
                         break;
                     case ME_BOUND_MY_AREA:
                     case ME_BOUND_RIVAL_AREA:

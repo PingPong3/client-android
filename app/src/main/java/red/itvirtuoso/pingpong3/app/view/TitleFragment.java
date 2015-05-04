@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Connection;
-import red.itvirtuoso.pingpong3.app.server.LocalServerProxy;
+import red.itvirtuoso.pingpong3.app.server.local.LocalServerProxy;
 import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 
 public class TitleFragment extends Fragment {

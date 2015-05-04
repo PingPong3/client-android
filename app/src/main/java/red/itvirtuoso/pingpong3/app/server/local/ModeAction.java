@@ -1,9 +1,9 @@
-package red.itvirtuoso.pingpong3.app.server;
+package red.itvirtuoso.pingpong3.app.server.local;
 
 /**
  * Created by kenji on 15/05/03.
  */
-public abstract class ModeAction extends Action {
+abstract class ModeAction extends Action {
     private Mode mode;
 
     public ModeAction(long time, Mode mode) {

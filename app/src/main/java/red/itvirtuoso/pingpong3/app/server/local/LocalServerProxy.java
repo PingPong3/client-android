@@ -1,8 +1,12 @@
-package red.itvirtuoso.pingpong3.app.server;
+package red.itvirtuoso.pingpong3.app.server.local;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import red.itvirtuoso.pingpong3.app.server.Packet;
+import red.itvirtuoso.pingpong3.app.server.PacketType;
+import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 
 /**
  * Created by kenji on 15/05/03.
