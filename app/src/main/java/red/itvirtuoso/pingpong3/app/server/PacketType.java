@@ -4,18 +4,38 @@ package red.itvirtuoso.pingpong3.app.server;
  * Created by kenji on 15/05/03.
  */
 public enum PacketType {
-    CONNECT_SUCCESS,
-    SWING,
-    ME_READY,
-    ME_SERVE,
-    ME_RETURN,
-    ME_BOUND_MY_AREA,
-    ME_BOUND_RIVAL_AREA,
-    ME_POINT,
-    RIVAL_READY,
-    RIVAL_SERVE,
-    RIVAL_RETURN,
-    RIVAL_BOUND_MY_AREA,
-    RIVAL_BOUND_RIVAL_AREA,
-    RIVAL_POINT,
+    CONNECT_SUCCESS(0),
+    SWING(1),
+    ME_READY(2),
+    ME_SERVE(3),
+    ME_RETURN(4),
+    ME_BOUND_MY_AREA(5),
+    ME_BOUND_RIVAL_AREA(6),
+    ME_POINT(7),
+    RIVAL_READY(8),
+    RIVAL_SERVE(9),
+    RIVAL_RETURN(10),
+    RIVAL_BOUND_MY_AREA(11),
+    RIVAL_BOUND_RIVAL_AREA(12),
+    RIVAL_POINT(13),
+    ;
+
+    private int id;
+
+    private PacketType(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public static PacketType valueOf(int id) {
+        for (PacketType type : values()) {
+            if (type.getId() == id) {
+                return type;
+            }
+        }
+        return null;
+    }
 }
