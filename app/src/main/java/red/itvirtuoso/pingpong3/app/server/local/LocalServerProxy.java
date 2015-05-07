@@ -11,7 +11,7 @@ import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 /**
  * Created by kenji on 15/05/03.
  */
-public class LocalServerProxy implements ServerProxy, Runnable {
+public class LocalServerProxy extends ServerProxy implements Runnable {
     private long stepTime;
     private Mode mode;
     private ArrayList<Action> actions;

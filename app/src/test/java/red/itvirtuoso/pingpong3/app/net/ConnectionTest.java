@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.is;
  * Created by kenji on 15/04/21.
  */
 public class ConnectionTest {
-    private class TestServerProxy implements ServerProxy {
+    private class TestServerProxy extends ServerProxy {
         private List<Packet> sendPackets = new ArrayList<>();
         private List<Packet> receivePackets = new ArrayList<>();
 
