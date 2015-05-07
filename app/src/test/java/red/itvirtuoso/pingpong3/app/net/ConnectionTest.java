@@ -19,7 +19,6 @@ import static org.hamcrest.Matchers.is;
 public class ConnectionTest {
     private class TestServerProxy extends ServerProxy {
         private List<Packet> sendPackets = new ArrayList<>();
-        private List<Packet> receivePackets = new ArrayList<>();
 
         @Override
         public boolean connect() {
@@ -36,11 +35,8 @@ public class ConnectionTest {
             this.sendPackets.add(packet);
         }
 
-        @Override
-        public Packet receive() {
-            return this.receivePackets.size() == 0
-                    ? null
-                    : this.receivePackets.remove(0);
+        private void addPacket(Packet packet) {
+            add(packet);
         }
     }
 
@@ -90,10 +86,9 @@ public class ConnectionTest {
         TestConnectionListener listener = new TestConnectionListener();
         connection.setListener(listener);
         connection.connect();
-        serverProxy.receivePackets.add(new Packet(PacketType.ME_READY));
-        while (serverProxy.receivePackets.size() > 0) {
-            Thread.yield();
-        }
+        serverProxy.addPacket(new Packet(PacketType.ME_READY));
+        /* TODO: パケットが処理されるまで少し待つ処理を、もう少しいい方法で書きたい */
+        Thread.sleep(10);
         connection.disconnect();
 
         /* 結果確認 */

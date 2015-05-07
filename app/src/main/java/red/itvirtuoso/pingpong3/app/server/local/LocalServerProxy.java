@@ -15,7 +15,6 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
     private long stepTime;
     private Mode mode;
     private ArrayList<Action> actions;
-    private ArrayList<Packet> packets;
 
     private ExecutorService service;
 
@@ -23,7 +22,6 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
         this.stepTime = stepTime;
         this.mode = Mode.UNREADY;
         this.actions = new ArrayList<>();
-        this.packets = new ArrayList<>();
 
         this.service = Executors.newSingleThreadExecutor();
         this.service.execute(this);
@@ -62,10 +60,7 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
             this.actions.add(new PacketAction(time, type) {
                 @Override
                 public boolean execute() {
-                    Packet packet = new Packet(type);
-                    synchronized (LocalServerProxy.this.packets) {
-                        LocalServerProxy.this.packets.add(packet);
-                    }
+                    LocalServerProxy.this.add(new Packet(type));
                     return true;
                 }
             });
@@ -139,16 +134,6 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
 
             default:
                 /* nop */
-        }
-    }
-
-    @Override
-    public Packet receive() {
-        synchronized (this.packets) {
-            if (this.packets.size() == 0) {
-                return null;
-            }
-            return this.packets.remove(0);
         }
     }
 }

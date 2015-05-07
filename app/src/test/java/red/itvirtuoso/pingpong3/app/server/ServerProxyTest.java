@@ -22,11 +22,6 @@ public class ServerProxyTest {
         }
 
         @Override
-        public Packet receive() {
-            return null;
-        }
-
-        @Override
         public void disconnect() {
             /* nop */
         }
