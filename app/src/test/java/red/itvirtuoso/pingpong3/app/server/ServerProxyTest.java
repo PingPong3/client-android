@@ -29,20 +29,20 @@ public class ServerProxyTest {
 
     @Test
     public void 何も追加していないときはnullが返る() throws Exception {
-        TestServerProxy proxy = new TestServerProxy();
-        assertThat(proxy.receive(), is(nullValue()));
+        TestServerProxy serverProxy = new TestServerProxy();
+        assertThat(serverProxy.receive(), is(nullValue()));
     }
 
     @Test
     public void 追加したパケットが順に取り出せる() throws Exception {
-        TestServerProxy proxy = new TestServerProxy();
+        TestServerProxy serverProxy = new TestServerProxy();
         Packet packet1 = new Packet(PacketType.ME_READY);
         Packet packet2 = new Packet(PacketType.RIVAL_READY);
-        proxy.add(packet1);
-        proxy.add(packet2);
+        serverProxy.add(packet1);
+        serverProxy.add(packet2);
 
-        assertThat(proxy.receive(), is(packet1));
-        assertThat(proxy.receive(), is(packet2));
-        assertThat(proxy.receive(), is(nullValue()));
+        assertThat(serverProxy.receive(), is(packet1));
+        assertThat(serverProxy.receive(), is(packet2));
+        assertThat(serverProxy.receive(), is(nullValue()));
     }
 }
