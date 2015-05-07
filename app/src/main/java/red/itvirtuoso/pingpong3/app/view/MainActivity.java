@@ -3,6 +3,7 @@ package red.itvirtuoso.pingpong3.app.view;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import red.itvirtuoso.pingpong3.R;
@@ -30,17 +31,31 @@ public class MainActivity extends Activity implements
     }
 
     @Override
-    public void start(Connection connection) {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        RacketFragment racketFragment = RacketFragment.newInstance();
-        transaction.replace(R.id.container, racketFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    public void start(final Connection connection) {
+        final RacketFragment racketFragment = RacketFragment.newInstance();
 
-        mConnection = connection;
-        mConnection.setListener(racketFragment);
-        mConnection.connect();
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mConnection = connection;
+                mConnection.setListener(racketFragment);
+                mConnection.connect();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (!mConnection.isConnected()) {
+                    return;
+                }
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.container, racketFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        };
+        task.execute();
     }
 
     @Override

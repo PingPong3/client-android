@@ -148,10 +148,6 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
             @Override
             public void run() {
                 switch (event.getType()) {
-                    case ME_READY:
-                    case RIVAL_READY:
-                        Toast.makeText(getActivity(), "試合開始", Toast.LENGTH_SHORT).show();
-                        break;
                     case ME_SERVE:
                     case RIVAL_SERVE:
                         playSound(mRawKa);
@@ -171,7 +167,7 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
                         playSound(mRawWhistle);
                         break;
                     default:
-                /* nop */
+                        /* nop */
                 }
             }
         };
