@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Connection;
-import red.itvirtuoso.pingpong3.app.server.local.LocalServerProxy;
 import red.itvirtuoso.pingpong3.app.server.ServerProxy;
+import red.itvirtuoso.pingpong3.app.server.local.LocalServerProxy;
+import red.itvirtuoso.pingpong3.app.server.socket.SocketServerProxy;
 
 public class TitleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
@@ -58,19 +61,35 @@ public class TitleFragment extends Fragment {
         mListener = null;
     }
 
-    private class PlayAsLocalButtonClick implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            ServerProxy serverProxy = new LocalServerProxy(MainActivity.STEP_TIME);
+    private abstract class PlayButtonClick implements View.OnClickListener {
+        protected void begin(ServerProxy serverProxy) {
             Connection connection = new Connection(serverProxy);
             mListener.start(connection);
         }
     }
 
-    private class PlayAsInternetButtonClick implements View.OnClickListener {
+    private class PlayAsLocalButtonClick extends PlayButtonClick {
         @Override
         public void onClick(View v) {
-            Toast.makeText(getActivity(), "インターネット対戦は作成中", Toast.LENGTH_SHORT).show();
+            ServerProxy serverProxy = new LocalServerProxy(MainActivity.STEP_TIME);
+            begin(serverProxy);
+        }
+    }
+
+    private class PlayAsInternetButtonClick extends PlayButtonClick {
+        @Override
+        public void onClick(View v) {
+            String host = getString(R.string.server_host);
+            InetAddress address = null;
+            try {
+                address = InetAddress.getByName(host);
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            }
+            int port = Integer.parseInt(getString(R.string.server_port));
+
+            ServerProxy serverProxy = new SocketServerProxy(address, port);
+            begin(serverProxy);
         }
     }
 
