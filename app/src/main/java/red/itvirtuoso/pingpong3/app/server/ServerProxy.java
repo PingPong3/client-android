@@ -1,5 +1,6 @@
 package red.itvirtuoso.pingpong3.app.server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -17,8 +18,9 @@ public abstract class ServerProxy {
             packets.add(packet);
         }
     }
-    public abstract boolean connect();
-    public abstract void send(Packet packet);
+
+    public abstract void connect() throws IOException;
+    public abstract void send(Packet packet) throws IOException;
 
     public final Packet receive() {
         synchronized (packets) {

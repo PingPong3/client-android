@@ -5,6 +5,9 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+
+import java.io.IOException;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Connection;
@@ -39,7 +42,11 @@ public class MainActivity extends Activity implements
             protected Void doInBackground(Void... params) {
                 mConnection = connection;
                 mConnection.setListener(racketFragment);
-                mConnection.connect();
+                try {
+                    mConnection.connect();
+                } catch (IOException e) {
+                    Log.w(TAG, "接続に失敗しました", e);
+                }
                 return null;
             }
 
@@ -60,6 +67,10 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onSwing() {
-        mConnection.swing();
+        try {
+            mConnection.swing();
+        } catch (IOException e) {
+            Log.e(TAG, "通信に失敗しました", e);
+        }
     }
 }

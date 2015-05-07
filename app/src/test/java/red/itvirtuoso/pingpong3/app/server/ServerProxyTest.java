@@ -2,6 +2,8 @@ package red.itvirtuoso.pingpong3.app.server;
 
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -12,12 +14,12 @@ import static org.hamcrest.Matchers.nullValue;
 public class ServerProxyTest {
     private class TestServerProxy extends ServerProxy {
         @Override
-        public boolean connect() {
-            return false;
+        public void connect() throws IOException {
+            /* nop */
         }
 
         @Override
-        public void send(Packet packet) {
+        public void send(Packet packet) throws IOException {
             /* nop */
         }
 

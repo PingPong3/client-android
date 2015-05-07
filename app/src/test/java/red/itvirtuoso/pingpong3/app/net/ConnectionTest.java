@@ -2,6 +2,7 @@ package red.itvirtuoso.pingpong3.app.net;
 
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +22,18 @@ public class ConnectionTest {
         private List<Packet> sendPackets = new ArrayList<>();
 
         @Override
-        public boolean connect() {
-            return true;
+        public void connect() throws IOException {
+            /* nop */
+        }
+
+        @Override
+        public void send(Packet packet) throws IOException {
+            this.sendPackets.add(packet);
         }
 
         @Override
         public void disconnect() {
             /* nop */
-        }
-
-        @Override
-        public void send(Packet packet) {
-            this.sendPackets.add(packet);
         }
 
         private void addPacket(Packet packet) {

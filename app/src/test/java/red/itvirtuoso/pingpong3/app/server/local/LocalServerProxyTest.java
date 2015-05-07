@@ -8,7 +8,6 @@ import java.util.List;
 import red.itvirtuoso.pingpong3.app.server.Packet;
 import red.itvirtuoso.pingpong3.app.server.PacketType;
 import red.itvirtuoso.pingpong3.app.server.ServerProxy;
-import red.itvirtuoso.pingpong3.app.server.local.LocalServerProxy;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -93,13 +92,10 @@ public class LocalServerProxyTest {
     }
 
     @Test(timeout = 1000)
-    public void 接続が成功する() {
+    public void 接続が成功する() throws Exception {
         LocalServerProxy serverProxy = new LocalServerProxy(STEP_TIME);
-        boolean result = serverProxy.connect();
+        serverProxy.connect();
         serverProxy.disconnect();
-
-        /* 結果確認 */
-        assertThat(result, is(true));
     }
 
     @Test(timeout = 1000)

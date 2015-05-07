@@ -1,5 +1,6 @@
 package red.itvirtuoso.pingpong3.app.server.local;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -81,12 +82,11 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
     }
 
     @Override
-    public boolean connect() {
+    public void connect() throws IOException {
         long currentTime = System.currentTimeMillis();
         addPacketAction(currentTime, 0, PacketType.CONNECT_SUCCESS);
         addModeAction(currentTime, 0, Mode.READY);
         addPacketAction(currentTime, 0, PacketType.ME_READY);
-        return true;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
     }
 
     @Override
-    public void send(Packet packet) {
+    public void send(Packet packet) throws IOException {
         switch (packet.getType()) {
             case SWING:
                 sendSwing();

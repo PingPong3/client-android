@@ -1,5 +1,6 @@
 package red.itvirtuoso.pingpong3.app.net;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,12 +41,11 @@ public class Connection implements Runnable {
         this.listener = listener;
     }
 
-    public final void connect() {
-        isConnected = serverProxy.connect();
-        if (isConnected) {
-            service.execute(this);
-            service.shutdown();
-        }
+    public final void connect() throws IOException {
+        serverProxy.connect();
+        service.execute(this);
+        service.shutdown();
+        isConnected = true;
     }
 
     public final void disconnect() {
@@ -57,7 +57,7 @@ public class Connection implements Runnable {
         return isConnected;
     }
 
-    public void swing() {
+    public void swing() throws IOException{
         Packet packet = new Packet(PacketType.SWING);
         serverProxy.send(packet);
     }
