@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements
     }
 
     @Override
-    public void start(final Connection connection) {
+    public void begin(final Connection connection) {
         final RacketFragment racketFragment = RacketFragment.newInstance();
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -72,5 +72,14 @@ public class MainActivity extends Activity implements
         } catch (IOException e) {
             Log.e(TAG, "通信に失敗しました", e);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mConnection != null) {
+            mConnection.disconnect();
+            mConnection = null;
+        }
+        super.onBackPressed();
     }
 }

@@ -64,7 +64,7 @@ public class TitleFragment extends Fragment {
     private abstract class PlayButtonClick implements View.OnClickListener {
         protected void begin(ServerProxy serverProxy) {
             Connection connection = new Connection(serverProxy);
-            mListener.start(connection);
+            mListener.begin(connection);
         }
     }
 
@@ -94,6 +94,6 @@ public class TitleFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        public void start(Connection connection);
+        public void begin(Connection connection);
     }
 }
