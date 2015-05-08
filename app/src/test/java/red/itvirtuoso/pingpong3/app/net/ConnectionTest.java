@@ -88,7 +88,7 @@ public class ConnectionTest {
         connection.setListener(listener);
         connection.connect();
         serverProxy.addPacket(new Packet(PacketType.ME_READY));
-        /* TODO: パケットが処理されるまで少し待つ処理を、もう少しいい方法で書きたい */
+        /* TODO: パケットが処理されるまで待つ処理を、処理時間に依存しない方法で書き直す */
         Thread.sleep(10);
         connection.disconnect();
 
