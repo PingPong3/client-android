@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Connection;
 import red.itvirtuoso.pingpong3.app.server.ServerProxy;
@@ -80,15 +77,9 @@ public class TitleFragment extends Fragment {
         @Override
         public void onClick(View v) {
             String host = getString(R.string.server_host);
-            InetAddress address = null;
-            try {
-                address = InetAddress.getByName(host);
-            } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
-            }
             int port = Integer.parseInt(getString(R.string.server_port));
 
-            ServerProxy serverProxy = new SocketServerProxy(address, port);
+            ServerProxy serverProxy = new SocketServerProxy(host, port);
             begin(serverProxy);
         }
     }

@@ -18,17 +18,18 @@ import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 public class SocketServerProxy extends ServerProxy implements Runnable {
     private static final String TAG = SocketServerProxy.class.getName();
 
-    private InetAddress address;
+    private String host;
     private int port;
     private Socket socket;
 
-    public SocketServerProxy(InetAddress address, int port) {
-        this.address = address;
+    public SocketServerProxy(String host, int port) {
+        this.host = host;
         this.port = port;
     }
 
     @Override
     public void connect() throws IOException {
+        InetAddress address = InetAddress.getByName(host);
         socket = new Socket(address, port);
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(this);
