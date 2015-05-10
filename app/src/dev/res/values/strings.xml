@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="server_host">pingpong3.itvirtuoso.red</string>
+    <string name="server_host">192.168.11.103</string>
     <string name="server_port">5000</string>
+    <string name="app_name">PingPong3(Dev)</string>
 </resources>

@@ -16,7 +16,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix '.debug'
         }
     }
     testOptions {
@@ -24,6 +23,7 @@ android {
     }
     productFlavors {
         dev {
+            applicationId 'red.itvirtuoso.pingpong3.dev'
         }
         prod {
         }
