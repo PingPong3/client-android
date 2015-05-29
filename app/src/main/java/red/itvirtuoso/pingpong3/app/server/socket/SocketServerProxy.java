@@ -18,19 +18,21 @@ import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 public class SocketServerProxy extends ServerProxy implements Runnable {
     private static final String TAG = SocketServerProxy.class.getName();
 
-    private String host;
-    private int port;
-    private Socket socket;
+    private String mHost;
+    private int mPort;
+    private Socket mSocket;
 
     public SocketServerProxy(String host, int port) {
-        this.host = host;
-        this.port = port;
+        this.mHost = host;
+        this.mPort = port;
     }
 
     @Override
     public void connect() throws IOException {
-        InetAddress address = InetAddress.getByName(host);
-        socket = new Socket(address, port);
+        Log.d(TAG, "execute " + new Object(){}.getClass().getEnclosingMethod().getName());
+        Log.d(TAG, "host = " + mHost + ", port = " + mPort);
+        InetAddress address = InetAddress.getByName(mHost);
+        mSocket = new Socket(address, mPort);
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(this);
         service.shutdown();
@@ -38,7 +40,7 @@ public class SocketServerProxy extends ServerProxy implements Runnable {
 
     @Override
     public void send(Packet packet) throws IOException {
-        socket.getOutputStream().write(packet.getType().getId());
+        mSocket.getOutputStream().write(packet.getType().getId());
     }
 
     @Override
@@ -46,7 +48,7 @@ public class SocketServerProxy extends ServerProxy implements Runnable {
         while (true) {
             int data = 0;
             try {
-                data = socket.getInputStream().read();
+                data = mSocket.getInputStream().read();
             } catch (IOException e) {
                 disconnect();
                 break;
@@ -63,9 +65,9 @@ public class SocketServerProxy extends ServerProxy implements Runnable {
     @Override
     public void disconnect() {
         try {
-            if (socket != null) {
-                socket.close();
-                socket = null;
+            if (mSocket != null) {
+                mSocket.close();
+                mSocket = null;
             }
         } catch (IOException e) {
             Log.w(TAG, "ソケットのクローズに失敗しました", e);

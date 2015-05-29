@@ -45,11 +45,6 @@ public class ConnectionTest {
         private List<Event> events = new ArrayList<>();
 
         @Override
-        public void onConnectSuccess() {
-            /* nop */
-        }
-
-        @Override
         public void onEvent(Event event) {
             this.events.add(event);
         }

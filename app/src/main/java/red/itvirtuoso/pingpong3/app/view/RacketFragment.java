@@ -14,15 +14,13 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.List;
 
 import red.itvirtuoso.pingpong3.R;
-import red.itvirtuoso.pingpong3.app.net.ConnectionListener;
 import red.itvirtuoso.pingpong3.app.net.Event;
 
-public class RacketFragment extends Fragment implements SensorEventListener, ConnectionListener {
+public class RacketFragment extends Fragment implements SensorEventListener {
     private OnFragmentInteractionListener mListener;
 
     private SensorManager mSensorManager;
@@ -137,13 +135,7 @@ public class RacketFragment extends Fragment implements SensorEventListener, Con
         }
     }
 
-    @Override
-    public void onConnectSuccess() {
-        Toast.makeText(getActivity(), "対戦相手を待っています", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onEvent(final Event event) {
+    public void executeEvent(final Event event) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

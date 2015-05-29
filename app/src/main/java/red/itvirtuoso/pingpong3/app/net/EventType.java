@@ -8,6 +8,7 @@ import red.itvirtuoso.pingpong3.app.server.PacketType;
  * Created by kenji on 15/05/03.
  */
 public enum EventType {
+    BEGIN,
     ME_READY,
     ME_SERVE,
     ME_RETURN,
@@ -24,6 +25,7 @@ public enum EventType {
 
     private static EnumMap<PacketType, EventType> map = new EnumMap<>(PacketType.class);
     static {
+        map.put(PacketType.BEGIN, BEGIN);
         map.put(PacketType.ME_READY, ME_READY);
         map.put(PacketType.ME_SERVE, ME_SERVE);
         map.put(PacketType.ME_RETURN, ME_RETURN);

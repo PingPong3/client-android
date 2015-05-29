@@ -29,4 +29,12 @@
         android:layout_marginTop="39dp"
         android:layout_below="@+id/play_as_local_button"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/info_text"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="54dp" />
 </RelativeLayout>

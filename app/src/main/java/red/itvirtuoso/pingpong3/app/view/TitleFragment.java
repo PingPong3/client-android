@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Connection;
@@ -18,6 +19,11 @@ public class TitleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Button mPlayAsLocalButton;
     private Button mPlayAsInternetButton;
+    private TextView mInfoText;
+
+    public enum Status {
+        INIT, WAIT,
+    }
 
     public static TitleFragment newInstance() {
         TitleFragment fragment = new TitleFragment();
@@ -35,6 +41,7 @@ public class TitleFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_title, container, false);
         mPlayAsLocalButton = (Button) rootView.findViewById(R.id.play_as_local_button);
         mPlayAsInternetButton = (Button) rootView.findViewById(R.id.play_as_internet_button);
+        mInfoText = (TextView) rootView.findViewById(R.id.info_text);
 
         mPlayAsLocalButton.setOnClickListener(new PlayAsLocalButtonClick());
         mPlayAsInternetButton.setOnClickListener(new PlayAsInternetButtonClick());
@@ -56,6 +63,31 @@ public class TitleFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void changeStatus(Status status) {
+        switch (status) {
+            case INIT:
+                changeStatusAsInit();
+                break;
+            case WAIT:
+                changeStatusAsWait();
+                break;
+            default:
+                /* NOP  */
+        }
+    }
+
+    private void changeStatusAsInit() {
+        mPlayAsLocalButton.setEnabled(true);
+        mPlayAsInternetButton.setEnabled(true);
+        mInfoText.setText("");
+    }
+
+    private void changeStatusAsWait() {
+        mPlayAsLocalButton.setEnabled(false);
+        mPlayAsInternetButton.setEnabled(false);
+        mInfoText.setText("対戦相手を待っています");
     }
 
     private abstract class PlayButtonClick implements View.OnClickListener {

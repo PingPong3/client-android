@@ -5,21 +5,28 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import java.io.IOException;
 
 import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Connection;
+import red.itvirtuoso.pingpong3.app.net.ConnectionListener;
+import red.itvirtuoso.pingpong3.app.net.Event;
 
 public class MainActivity extends Activity implements
+        ConnectionListener,
         TitleFragment.OnFragmentInteractionListener,
         RacketFragment.OnFragmentInteractionListener {
 
     public static final long STEP_TIME = 750;
     private static final String TAG = MainActivity.class.getName();
 
+    private Handler mHandler = new Handler();
     private Connection mConnection;
+    private TitleFragment mTitleFragment;
+    private RacketFragment mRacketFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,21 +34,20 @@ public class MainActivity extends Activity implements
 
         setContentView(R.layout.activity_title);
         if (savedInstanceState == null) {
+            mTitleFragment = TitleFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, TitleFragment.newInstance())
+                    .add(R.id.container, mTitleFragment)
                     .commit();
         }
     }
 
     @Override
     public void begin(final Connection connection) {
-        final RacketFragment racketFragment = RacketFragment.newInstance();
-
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 mConnection = connection;
-                mConnection.setListener(racketFragment);
+                mConnection.setListener(MainActivity.this);
                 try {
                     mConnection.connect();
                 } catch (IOException e) {
@@ -55,14 +61,41 @@ public class MainActivity extends Activity implements
                 if (!mConnection.isConnected()) {
                     return;
                 }
-                FragmentManager manager = getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.container, racketFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                mTitleFragment.changeStatus(TitleFragment.Status.WAIT);
             }
         };
         task.execute();
+    }
+
+    @Override
+    public void onEvent(final Event event) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                onEventImpl(event);
+            }
+        });
+    }
+
+    private void onEventImpl(Event event) {
+        switch (event.getType()) {
+            case BEGIN:
+                onEventBegin();
+                break;
+            default:
+                mRacketFragment.executeEvent(event);
+        }
+    }
+
+    private void onEventBegin() {
+        mTitleFragment.changeStatus(TitleFragment.Status.INIT);
+
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        mRacketFragment = RacketFragment.newInstance();
+        transaction.replace(R.id.container, mRacketFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override

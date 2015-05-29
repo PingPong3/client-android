@@ -16,13 +16,13 @@ import red.itvirtuoso.pingpong3.app.server.ServerProxy;
 public class Connection implements Runnable {
     private static final String TAG = Connection.class.getName();
 
-    private ServerProxy serverProxy;
-    private ConnectionListener listener;
+    private ServerProxy mServerProxy;
+    private ConnectionListener mListener;
     private boolean isConnected = false;
     private ExecutorService service;
 
     public Connection(ServerProxy serverProxy) {
-        this.serverProxy = serverProxy;
+        this.mServerProxy = serverProxy;
         this.service = Executors.newSingleThreadExecutor();
     }
 
@@ -31,25 +31,25 @@ public class Connection implements Runnable {
         Log.i(TAG, "Start connection loop");
         while (isConnected) {
             Thread.yield();
-            Packet packet = serverProxy.receive();
+            Packet packet = mServerProxy.receive();
             if (packet == null) {
                 continue;
             }
             Log.i(TAG, "RCV " + packet);
             EventType eventType = EventType.create(packet.getType());
-            if (eventType != null && listener != null) {
-                listener.onEvent(new Event(eventType));
+            if (eventType != null && mListener != null) {
+                mListener.onEvent(new Event(eventType));
             }
         }
         Log.i(TAG, "End connection loop");
     }
 
     public void setListener(ConnectionListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
     }
 
     public final void connect() throws IOException {
-        serverProxy.connect();
+        mServerProxy.connect();
         service.execute(this);
         service.shutdown();
         isConnected = true;
@@ -57,7 +57,7 @@ public class Connection implements Runnable {
 
     public final void disconnect() {
         isConnected = false;
-        serverProxy.disconnect();
+        mServerProxy.disconnect();
     }
 
     public final boolean isConnected() {
@@ -67,6 +67,6 @@ public class Connection implements Runnable {
     public void swing() throws IOException{
         Packet packet = new Packet(PacketType.SWING);
         Log.i(TAG, "SND " + packet);
-        serverProxy.send(packet);
+        mServerProxy.send(packet);
     }
 }

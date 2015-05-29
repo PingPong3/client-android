@@ -84,7 +84,7 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
     @Override
     public void connect() throws IOException {
         long currentTime = System.currentTimeMillis();
-        addPacketAction(currentTime, 0, PacketType.CONNECT_SUCCESS);
+        addPacketAction(currentTime, 0, PacketType.BEGIN);
         addModeAction(currentTime, 0, Mode.READY);
         addPacketAction(currentTime, 0, PacketType.ME_READY);
     }
