@@ -22,7 +22,7 @@ public class TitleFragment extends Fragment {
     private TextView mInfoText;
 
     public enum Status {
-        INIT, WAIT,
+        INIT, WAIT, ERROR,
     }
 
     public static TitleFragment newInstance() {
@@ -66,28 +66,28 @@ public class TitleFragment extends Fragment {
     }
 
     public void changeStatus(Status status) {
+        boolean isButtonEnabled = false;
+        String message = "";
+
         switch (status) {
             case INIT:
-                changeStatusAsInit();
+                isButtonEnabled = true;
+                message = "";
                 break;
             case WAIT:
-                changeStatusAsWait();
+                isButtonEnabled = false;
+                message = "対戦相手を待っています";
+                break;
+            case ERROR:
+                isButtonEnabled = true;
+                message = "接続できませんでした";
                 break;
             default:
                 /* NOP  */
         }
-    }
-
-    private void changeStatusAsInit() {
-        mPlayAsLocalButton.setEnabled(true);
-        mPlayAsInternetButton.setEnabled(true);
-        mInfoText.setText("");
-    }
-
-    private void changeStatusAsWait() {
-        mPlayAsLocalButton.setEnabled(false);
-        mPlayAsInternetButton.setEnabled(false);
-        mInfoText.setText("対戦相手を待っています");
+        mPlayAsLocalButton.setEnabled(isButtonEnabled);
+        mPlayAsInternetButton.setEnabled(isButtonEnabled);
+        mInfoText.setText(message);
     }
 
     private abstract class PlayButtonClick implements View.OnClickListener {

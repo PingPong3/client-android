@@ -4,7 +4,6 @@
     <string name="server_port">5000</string>
     <string name="app_name">PingPong3</string>
 
-    <string name="title">Ping Pong Game</string>
-    <string name="play_as_local">Play as local</string>
-    <string name="play_as_internet">Play as Internet</string>
+    <string name="play_as_local">一人で練習</string>
+    <string name="play_as_internet">ネットで対戦</string>
 </resources>

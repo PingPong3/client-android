@@ -32,7 +32,7 @@ public class MainActivity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_title);
+        setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             mTitleFragment = TitleFragment.newInstance();
             getFragmentManager().beginTransaction()
@@ -59,6 +59,7 @@ public class MainActivity extends Activity implements
             @Override
             protected void onPostExecute(Void aVoid) {
                 if (!mConnection.isConnected()) {
+                    mTitleFragment.changeStatus(TitleFragment.Status.ERROR);
                     return;
                 }
                 mTitleFragment.changeStatus(TitleFragment.Status.WAIT);
