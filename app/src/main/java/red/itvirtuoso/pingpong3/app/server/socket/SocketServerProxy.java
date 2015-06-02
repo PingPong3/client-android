@@ -46,19 +46,27 @@ public class SocketServerProxy extends ServerProxy implements Runnable {
     @Override
     public void run() {
         while (true) {
-            int data = 0;
+            PacketType type;
             try {
-                data = mSocket.getInputStream().read();
+                int data = mSocket.getInputStream().read();
+                if (data < 0) {
+                    disconnect();
+                    break;
+                }
+                Packet packet;
+                type = PacketType.valueOf(data);
+                if (type == PacketType.ME_POINT || type == PacketType.RIVAL_POINT) {
+                    int data1 = mSocket.getInputStream().read();
+                    int data2 = mSocket.getInputStream().read();
+                    packet = new Packet(type, data1, data2);
+                } else {
+                    packet = new Packet(type.valueOf(data));
+                }
+                add(packet);
             } catch (IOException e) {
                 disconnect();
                 break;
             }
-            if (data < 0) {
-                disconnect();
-                break;
-            }
-            Packet packet = new Packet(PacketType.valueOf(data));
-            add(packet);
         }
     }
 

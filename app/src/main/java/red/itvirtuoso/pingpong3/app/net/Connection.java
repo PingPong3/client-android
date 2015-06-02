@@ -38,7 +38,7 @@ public class Connection implements Runnable {
             Log.i(TAG, "RCV " + packet);
             EventType eventType = EventType.create(packet.getType());
             if (eventType != null && mListener != null) {
-                mListener.onEvent(new Event(eventType));
+                mListener.onEvent(new Event(eventType, packet.getData()));
             }
         }
         Log.i(TAG, "End connection loop");

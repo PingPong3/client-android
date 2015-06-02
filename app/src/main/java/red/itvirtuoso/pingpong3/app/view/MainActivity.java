@@ -20,7 +20,7 @@ public class MainActivity extends Activity implements
         TitleFragment.OnFragmentInteractionListener,
         RacketFragment.OnFragmentInteractionListener {
 
-    public static final long STEP_TIME = 750;
+    public static final long STEP_TIME = 650;
     private static final String TAG = MainActivity.class.getName();
 
     private Handler mHandler = new Handler();

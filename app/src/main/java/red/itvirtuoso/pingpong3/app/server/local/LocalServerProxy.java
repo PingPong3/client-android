@@ -61,7 +61,13 @@ public class LocalServerProxy extends ServerProxy implements Runnable {
             this.actions.add(new PacketAction(time, type) {
                 @Override
                 public boolean execute() {
-                    LocalServerProxy.this.add(new Packet(type));
+                    Packet packet;
+                    if (type == PacketType.ME_POINT || type == PacketType.RIVAL_POINT) {
+                        packet = new Packet(type, 0, 0);
+                    } else {
+                        packet = new Packet(type);
+                    }
+                    LocalServerProxy.this.add(packet);
                     return true;
                 }
             });

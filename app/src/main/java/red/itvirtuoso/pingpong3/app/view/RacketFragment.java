@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ import red.itvirtuoso.pingpong3.app.net.Event;
 
 public class RacketFragment extends Fragment implements SensorEventListener {
     private OnFragmentInteractionListener mListener;
+
+    private TextView mScoreText;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -61,7 +64,9 @@ public class RacketFragment extends Fragment implements SensorEventListener {
         }
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_racket, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_racket, container, false);
+        mScoreText = (TextView) rootView.findViewById(R.id.score_text);
+        return rootView;
     }
 
     @Override
@@ -139,6 +144,7 @@ public class RacketFragment extends Fragment implements SensorEventListener {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                int[] data = event.getData();
                 switch (event.getType()) {
                     case ME_SERVE:
                     case RIVAL_SERVE:
@@ -156,6 +162,7 @@ public class RacketFragment extends Fragment implements SensorEventListener {
                         break;
                     case ME_POINT:
                     case RIVAL_POINT:
+                        mScoreText.setText(data[0] + " - " + data[1]);
                         playSound(mRawWhistle);
                         break;
                     default:

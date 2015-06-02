@@ -1,17 +1,25 @@
 package red.itvirtuoso.pingpong3.app.net;
 
+import java.util.Arrays;
+
 /**
  * Created by kenji on 15/05/03.
  */
 public class Event {
     private EventType type;
+    private int[] data;
 
-    public Event(EventType type) {
+    public Event(EventType type, int[] data) {
         this.type = type;
+        this.data = data;
     }
 
     public EventType getType() {
         return type;
+    }
+
+    public int[] getData() {
+        return data;
     }
 
     @Override
@@ -21,6 +29,7 @@ public class Event {
 
         Event event = (Event) o;
 
+        if (!Arrays.equals(data, event.data)) return false;
         if (type != event.type) return false;
 
         return true;
@@ -28,13 +37,16 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return type.hashCode();
+        int result = type.hashCode();
+        result = 31 * result + Arrays.hashCode(data);
+        return result;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{" +
+        return "Event{" +
                 "type=" + type +
+                ", data=" + Arrays.toString(data) +
                 '}';
     }
 }

@@ -1,9 +1,33 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="red.itvirtuoso.pingpong3.app.view.RacketFragment"
     android:background="#ffff653a">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SCORE"
+        android:id="@+id/scorelabel_text"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:textSize="48dp"
+        android:textStyle="bold"
+        android:textColor="#fffcffc5"
+        android:layout_marginTop="32dp" />
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0 - 0"
+        android:id="@+id/score_text"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/scorelabel_text"
+        android:gravity="center"
+        android:textSize="64dp"
+        android:textStyle="bold"
+        android:textColor="#fffcffc5" />
+</RelativeLayout>
