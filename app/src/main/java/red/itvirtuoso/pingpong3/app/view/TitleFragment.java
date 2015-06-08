@@ -88,6 +88,7 @@ public class TitleFragment extends Fragment {
             default:
                 /* NOP  */
         }
+        mHowToPlayButton.setEnabled(isButtonEnabled);
         mPlayAsLocalButton.setEnabled(isButtonEnabled);
         mPlayAsInternetButton.setEnabled(isButtonEnabled);
         mInfoText.setText(message);
