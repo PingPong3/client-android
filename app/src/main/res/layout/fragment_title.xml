@@ -30,19 +30,28 @@
         <Button
             android:layout_width="192dp"
             android:layout_height="wrap_content"
-            android:text="@string/play_as_internet"
-            android:id="@+id/play_as_internet_button"
+            android:text="@string/how_to_play"
+            android:id="@+id/how_to_play_button"
             android:layout_below="@+id/title_image"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp" />
+            android:layout_marginTop="12dp" />
 
         <Button
             android:layout_width="192dp"
             android:layout_height="wrap_content"
             android:text="@string/play_as_local"
             android:id="@+id/play_as_local_button"
-            android:layout_below="@id/play_as_internet_button"
+            android:layout_below="@id/how_to_play_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp" />
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:text="@string/play_as_internet"
+            android:id="@+id/play_as_internet_button"
+            android:layout_below="@+id/play_as_local_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp" />
     </RelativeLayout>
 </RelativeLayout>

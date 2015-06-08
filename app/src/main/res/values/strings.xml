@@ -6,4 +6,16 @@
 
     <string name="play_as_local">一人で練習</string>
     <string name="play_as_internet">ネットで対戦</string>
+
+    <string name="how_to_play">遊び方</string>
+    <string name="how_to_play_1">PingPongは、ケータイをラケットに見立てて遊ぶ、卓球ゲームです。一人でCPUと遊ぶこともできますし、ネットワーク越しに他のプレイヤーと遊ぶこともできます。</string>
+    <string name="how_to_play_2">スイング</string>
+    <string name="how_to_play_3">ケータイをしっかりと手に持って、卓球のラケットのように振ってください。手首のスナップを効かせてコンパクトに振るのがコツです。フォアハンド、バックハンドのいずれでも振ることができます。</string>
+    <string name="how_to_play_4">勢いあまってケータイを飛ばしてしまったり、人やものをたたいてしまわないよう、十分注意してください</string>
+    <string name="how_to_play_5">タイミング</string>
+    <string name="how_to_play_6">サーブ権を持つ人がスイングすると、サーブをしたことになります。サーブがされると次のタイミングで音が鳴ります。\n 1. ラケットでボールを打った音（♪カッ）\n 2. 自陣でボールがバウンドした音（♪コッ）\n 3. 敵陣でボールがバウンドした音（♪コッ）\n</string>
+    <string name="how_to_play_7">次のタイミングで相手がスイングすると、リターンをしたことになります。リターンがされると次のタイミングで音が鳴ります。\n 1. ラケットでボールを打った音（♪カッ）\n 2. 自陣にはバウンドしない（♪・・）\n 3. 敵陣でボールがバウンドした音（♪コッ）\n</string>
+    <string name="how_to_play_8">あとはさらにリターンをすることでラリーになります。うまくラリーがつながると、次のように３つセットで音が鳴ります。\n「カッコッコッ、カッ・・コッ、カッ・・コッ、...」</string>
+    <string name="how_to_play_9">ミス</string>
+    <string name="how_to_play_10">リターンのタイミングでスイングできないと、ミスとなりホイッスルが鳴ります。\nミスをしていないほうのサーブで試合を再開します</string>
 </resources>

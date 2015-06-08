@@ -17,6 +17,7 @@ import red.itvirtuoso.pingpong3.app.server.socket.SocketServerProxy;
 
 public class TitleFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private Button mHowToPlayButton;
     private Button mPlayAsLocalButton;
     private Button mPlayAsInternetButton;
     private TextView mInfoText;
@@ -39,10 +40,12 @@ public class TitleFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_title, container, false);
+        mHowToPlayButton = (Button) rootView.findViewById(R.id.how_to_play_button);
         mPlayAsLocalButton = (Button) rootView.findViewById(R.id.play_as_local_button);
         mPlayAsInternetButton = (Button) rootView.findViewById(R.id.play_as_internet_button);
         mInfoText = (TextView) rootView.findViewById(R.id.info_text);
 
+        mHowToPlayButton.setOnClickListener(new HowToPlayButtonClick());
         mPlayAsLocalButton.setOnClickListener(new PlayAsLocalButtonClick());
         mPlayAsInternetButton.setOnClickListener(new PlayAsInternetButtonClick());
         return rootView;
@@ -90,6 +93,13 @@ public class TitleFragment extends Fragment {
         mInfoText.setText(message);
     }
 
+    private class HowToPlayButtonClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            mListener.howToPlay();
+        }
+    }
+
     private abstract class PlayButtonClick implements View.OnClickListener {
         protected void begin(ServerProxy serverProxy) {
             Connection connection = new Connection(serverProxy);
@@ -118,5 +128,6 @@ public class TitleFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         public void begin(Connection connection);
+        public void howToPlay();
     }
 }

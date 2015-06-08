@@ -17,6 +17,7 @@ import red.itvirtuoso.pingpong3.app.net.Event;
 
 public class MainActivity extends Activity implements
         ConnectionListener,
+        HowToPlayFragment.OnFragmentInteractionListener,
         TitleFragment.OnFragmentInteractionListener,
         RacketFragment.OnFragmentInteractionListener {
 
@@ -25,6 +26,7 @@ public class MainActivity extends Activity implements
 
     private Handler mHandler = new Handler();
     private Connection mConnection;
+    private HowToPlayFragment mHowToPlayFragment;
     private TitleFragment mTitleFragment;
     private RacketFragment mRacketFragment;
 
@@ -39,6 +41,18 @@ public class MainActivity extends Activity implements
                     .add(R.id.container, mTitleFragment)
                     .commit();
         }
+
+        mHowToPlayFragment = HowToPlayFragment.newInstance();
+        mRacketFragment = RacketFragment.newInstance();
+    }
+
+    @Override
+    public void howToPlay() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container, mHowToPlayFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
@@ -93,7 +107,6 @@ public class MainActivity extends Activity implements
 
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        mRacketFragment = RacketFragment.newInstance();
         transaction.replace(R.id.container, mRacketFragment);
         transaction.addToBackStack(null);
         transaction.commit();
