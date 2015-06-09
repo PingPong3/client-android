@@ -23,7 +23,7 @@ public class TitleFragment extends Fragment {
     private TextView mInfoText;
 
     public enum Status {
-        INIT, WAIT, ERROR,
+        INIT, CONNECTING, WAIT, ERROR,
     }
 
     public static TitleFragment newInstance() {
@@ -77,6 +77,10 @@ public class TitleFragment extends Fragment {
                 isButtonEnabled = true;
                 message = "";
                 break;
+            case CONNECTING:
+                isButtonEnabled = false;
+                message = "サーバに接続中";
+                break;
             case WAIT:
                 isButtonEnabled = false;
                 message = "対戦相手を待っています";
@@ -103,6 +107,7 @@ public class TitleFragment extends Fragment {
 
     private abstract class PlayButtonClick implements View.OnClickListener {
         protected void begin(ServerProxy serverProxy) {
+            changeStatus(Status.CONNECTING);
             Connection connection = new Connection(serverProxy);
             mListener.begin(connection);
         }

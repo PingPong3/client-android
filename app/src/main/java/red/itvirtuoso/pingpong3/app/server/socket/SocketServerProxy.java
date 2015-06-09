@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +33,8 @@ public class SocketServerProxy extends ServerProxy implements Runnable {
         Log.d(TAG, "execute " + new Object(){}.getClass().getEnclosingMethod().getName());
         Log.d(TAG, "host = " + mHost + ", port = " + mPort);
         InetAddress address = InetAddress.getByName(mHost);
-        mSocket = new Socket(address, mPort);
+        mSocket = new Socket();
+        mSocket.connect(new InetSocketAddress(address, mPort), 3000);
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(this);
         service.shutdown();
