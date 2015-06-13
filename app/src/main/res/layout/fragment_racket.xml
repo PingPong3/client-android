@@ -30,4 +30,27 @@
         android:textSize="64dp"
         android:textStyle="bold"
         android:textColor="#fffcffc5" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sensitivity_seek"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="24dp"
+        android:progress="50"
+        android:max="100" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="低 ←  スイング感度  → 高"
+        android:id="@+id/sensitivity_text"
+        android:layout_above="@+id/sensitivity_seek"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </RelativeLayout>

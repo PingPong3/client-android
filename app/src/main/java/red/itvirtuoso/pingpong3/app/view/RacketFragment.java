@@ -3,6 +3,7 @@ package red.itvirtuoso.pingpong3.app.view;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,9 +12,11 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,15 +25,18 @@ import red.itvirtuoso.pingpong3.R;
 import red.itvirtuoso.pingpong3.app.net.Event;
 
 public class RacketFragment extends Fragment implements SensorEventListener {
+    private static final String SP_SENSITIVITY = "SENSITIVITY";
+
     private OnFragmentInteractionListener mListener;
 
     private TextView mScoreText;
+    private SeekBar mSensitivitySeek;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private boolean mSwinging = false;
+    private long mLastSwinging;
     private double mGravityZ;
-    private float mAccelerationThreshold = (float) 6.0;
 
     private SoundPool mSoundPool;
     private int mRawFoo;
@@ -66,6 +72,7 @@ public class RacketFragment extends Fragment implements SensorEventListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_racket, container, false);
         mScoreText = (TextView) rootView.findViewById(R.id.score_text);
+        mSensitivitySeek = (SeekBar) rootView.findViewById(R.id.sensitivity_seek);
         return rootView;
     }
 
@@ -83,6 +90,9 @@ public class RacketFragment extends Fragment implements SensorEventListener {
     @Override
     public void onResume() {
         super.onResume();
+        /* 感度シークバーの設定 */
+        mSensitivitySeek.setProgress(getSensitivity());
+
         /* 加速度センサーリスナーの登録 */
         if (this.mSensorManager != null) {
             mSensorManager.registerListener(this, mAccelerometer,
@@ -102,6 +112,9 @@ public class RacketFragment extends Fragment implements SensorEventListener {
         super.onPause();
         /* サウンドの解放 */
         mSoundPool.release();
+
+        /* 感度シークバーの保存 */
+        setSensitivity(mSensitivitySeek.getProgress());
     }
 
     @Override
@@ -132,11 +145,15 @@ public class RacketFragment extends Fragment implements SensorEventListener {
         final float alpha = 0.8f;
         mGravityZ = alpha * mGravityZ + (1 - alpha) * event.values[2];
         double acceleration = Math.abs(event.values[2] - mGravityZ);
-        if (!mSwinging && acceleration > mAccelerationThreshold * 3) {
+        double min = 8.0d;   /* for small phone */
+        double max = 26.0d;  /* for big phone */
+        double sensitivity = ((max + min) / 2 - (mSensitivitySeek.getProgress() - 50) / 50.0d * (max - min) / 2);
+        if (!mSwinging && acceleration > sensitivity && mLastSwinging < System.currentTimeMillis()) {
             mSwinging = true;
             mListener.onSwing();
-        } else if (mSwinging && acceleration < mAccelerationThreshold) {
+        } else if (mSwinging && acceleration < 2.0d) {
             mSwinging = false;
+            mLastSwinging = System.currentTimeMillis() + 2000;
         }
     }
 
@@ -171,6 +188,16 @@ public class RacketFragment extends Fragment implements SensorEventListener {
             }
         };
         mHandler.post(runnable);
+    }
+
+    private int getSensitivity() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        return sp.getInt(SP_SENSITIVITY, 50);
+    }
+
+    private void setSensitivity(int sensitivity) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        sp.edit().putInt(SP_SENSITIVITY, sensitivity).commit();
     }
 
     public interface OnFragmentInteractionListener {
